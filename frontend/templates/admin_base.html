@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Library Admin Dashboard{% endblock %}</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <style>
+      :root {
+        --bg-primary: #1e293b; /* Deep Professional Blue */
+        --bg-secondary: #ffffff; /* Clean White */
+        --bg-light: #f8fafc; /* Light Gray Background */
+      }
+
+      body {
+        background-color: var(--bg-light);
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      /* 🗂️ Sidebar Style */
+      .sidebar {
+        width: 260px;
+        background-color: var(--bg-primary);
+        min-height: 100vh;
+        z-index: 1000;
+        box-shadow: 4px 0 10px rgba(0, 0, 0, 0.05);
+      }
+
+      .sidebar .nav-link {
+        color: rgba(255, 255, 255, 0.7);
+        padding: 12px 24px;
+        font-weight: 500;
+        border-left: 4px solid transparent;
+        transition: all 0.2s ease;
+      }
+
+      .sidebar .nav-link:hover {
+        color: var(--bg-secondary);
+        background-color: rgba(255, 255, 255, 0.05);
+      }
+
+      .sidebar .nav-link.active {
+        color: var(--bg-primary) !important;
+        background-color: var(--bg-secondary);
+        border-left-color: var(--bg-secondary);
+      }
+
+      /* 📊 Navbar Style */
+      .top-navbar {
+        background-color: var(--bg-secondary);
+        height: 75px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+      }
+
+      /* FIX: Added overflow control to parent containers layout structure */
+      .custom-card {
+        background-color: var(--bg-secondary);
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        border-radius: 8px;
+        max-width: 100%;
+        overflow: hidden;
+      }
+
+      .icon-box {
+        width: 50px;
+        height: 50px;
+        background-color: var(--bg-primary);
+        color: var(--bg-secondary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .btn-primary-custom {
+        background-color: var(--bg-primary);
+        color: var(--bg-secondary);
+        border: none;
+      }
+      .btn-primary-custom:hover {
+        background-color: #0f172a;
+        color: var(--bg-secondary);
+      }
+    </style>
+    {% block extra_css %}{% endblock %}
+  </head>
+  <body class="d-flex">
+    <!-- 🗂️ COMMON SIDEBAR -->
+    <div class="sidebar d-flex flex-column flex-shrink-0 text-white position-fixed start-0 top-0 bottom-0">
+      <div class="d-flex align-items-center justify-content-start ps-4 border-bottom border-secondary-subtle border-opacity-25" style="height: 75px">
+        <a href="#" class="text-white text-decoration-none fs-4 fw-bold tracking-wider"> <i class="fa-solid fa-book-open-reader me-2"></i> LMS </a>
+      </div>
+
+      <ul class="nav nav-pills flex-column mb-auto py-3 gap-1">
+        <li class="nav-item">
+          <a href="/dashboard" class="nav-link {% block nav_dashboard %}{% endblock %}"> <i class="fa-solid fa-chart-pie me-3 w-25"></i>Dashboard </a>
+        </li>
+        <li>
+          <a href="/manage-books" class="nav-link {% block nav_books %}{% endblock %}"> <i class="fa-solid fa-book me-3 w-25"></i>Manage Books </a>
+        </li>
+        <li>
+          <a href="/categories" class="nav-link {% block nav_categories %}{% endblock %}"> <i class="fa-solid fa-tags me-3 w-25"></i>Categories </a>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+        </li>
+        <li>
+          <a href="/languages" class="nav-link {% block nav_languages %}{% endblock %}"> <i class="fa-solid fa-language me-3 w-25"></i>Languages </a>
+        </li>
+        <li>
+          <a href="/members" class="nav-link {% block nav_members %}{% endblock %}"> <i class="fa-solid fa-users me-3 w-25"></i>Members </a>
+        </li>
+        <li>
+          <a href="/issue-return" class="nav-link {% block nav_issue %}{% endblock %}"> <i class="fa-solid fa-hand-holding me-3 w-25"></i>Issue / Return </a>
+        </li>
+      </ul>
+
+      <div class="p-3 border-top border-secondary-subtle border-opacity-25">
+        <a href="/logout" class="d-flex align-items-center text-danger text-decoration-none py-2 px-3"> <i class="fa-solid fa-right-from-bracket me-3"></i> Logout </a>
+      </div>
+    </div>
+
+    <!-- 📊 MAIN CONTAINER -->
+    <!-- FIX: Added max-width and overflow settings to protect dynamic view containers -->
+    <div class="flex-grow-1" style="margin-left: 260px; min-height: 100vh; max-width: calc(100% - 260px); overflow-x: hidden">
+      <!-- 🔝 COMMON NAVBAR -->
+      <header class="top-navbar d-flex align-items-center justify-content-between px-4 sticky-top">
+        <h4 class="m-0 fw-semibold text-dark">{% block page_heading %}Admin Control Panel{% endblock %}</h4>
+        <div class="d-flex align-items-center gap-4">
+          <div class="position-relative cursor-pointer">
+            <i class="fa-regular fa-bell fs-5 text-secondary"></i>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem">3</span>
+          </div>
+          <div class="d-flex align-items-center gap-2 border-start ps-3">
+            <div class="avatar icon-box fw-bold" style="width: 38px; height: 38px">A</div>
+            <span class="fw-medium text-dark d-none d-sm-inline">Admin </span>
+          </div>
+        </div>
+      </header>
+
+      <main class="p-4">{% block content %} {% endblock %}</main>
+    </div>
+
+    <!-- Bootstrap 5 JS Package Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

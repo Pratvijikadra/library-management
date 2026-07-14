@@ -1,0 +1,90 @@
+{% extends './admin_base.html' %} {% block title %} Admin Dashboard {% endblock %} {% block content %}
+
+<!-- Main Workspace Dashboard Data -->
+
+<!-- Quick Stats Layout -->
+<div class="row g-4 mb-4">
+  <!-- Total Stock Info -->
+  <div class="col-12 col-md-4">
+    <div class="custom-card p-4 d-flex align-items-center shadow-sm">
+      <div class="icon-box">
+        <i class="fa-solid fa-book-bookmark fs-5"></i>
+      </div>
+      {% if books %} {% for book in books %}
+      <div class="ms-3">
+        <small class="text-muted d-block fw-medium">Total Registered Books</small>
+        <span class="fs-3 fw-bold">{{ book.title }}</span>
+      </div>
+      {% endfor %} {% endif %}
+    </div>
+  </div>
+  <!-- Total Registered Readers -->
+  <div class="col-12 col-md-4">
+    <div class="custom-card p-4 d-flex align-items-center shadow-sm">
+      <div class="icon-box">
+        <i class="fa-solid fa-users fs-5"></i>
+      </div>
+      <div class="ms-3">
+        <small class="text-muted d-block fw-medium">Active Registered Members</small>
+        <span class="fs-3 fw-bold">452</span>
+      </div>
+    </div>
+  </div>
+  <!-- Total Live Rented/Issued Books -->
+  <div class="col-12 col-md-4">
+    <div class="custom-card p-4 d-flex align-items-center shadow-sm">
+      <div class="icon-box">
+        <i class="fa-solid fa-book-open fs-5"></i>
+      </div>
+      <div class="ms-3">
+        <small class="text-muted d-block fw-medium">Total Books Transacted</small>
+        <span class="fs-3 fw-bold">115</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Interactive Book Log Component -->
+<div class="custom-card p-4 shadow-sm">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h5 class="m-0 fw-bold">Recently Registered Books</h5>
+    <button class="btn btn-primary-custom px-4 py-2 text-sm fw-medium rounded d-flex align-items-center gap-2"><i class="fa-solid fa-plus"></i> Add New Book</button>
+  </div>
+
+  <!-- Tabular Book Summary View -->
+  <div class="table-responsive">
+    <table class="table table-hover align-middle mb-0">
+      <thead>
+        <tr class="text-secondary opacity-70 border-bottom-2">
+          <th class="pb-3 fw-semibold">Book Title</th>
+          <th class="pb-3 fw-semibold">ISBN Identifier</th>
+          <th class="pb-3 fw-semibold">Category Type</th>
+          <th class="pb-3 fw-semibold">Status</th>
+          <th class="pb-3 fw-semibold text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="fw-semibold text-dark">The Golden Success</td>
+          <td class="text-muted">978-3-16-14841</td>
+          <td>Motivation</td>
+          <td><span class="badge bg-success-subtle text-success fw-bold px-2 py-1.5 rounded-pill">Available</span></td>
+          <td class="text-center">
+            <button class="btn btn-link text-secondary p-0" title="Edit Data"><i class="fa-solid fa-pen-to-square"></i></button>
+          </td>
+        </tr>
+        <tr>
+          <td class="fw-semibold text-dark">Python for Beginners</td>
+          <td class="text-muted">978-1-23-45678</td>
+          <td>Technology</td>
+          <td><span class="badge bg-warning-subtle text-warning fw-bold px-2 py-1.5 rounded-pill">Issued</span></td>
+          <td class="text-center">
+            <button class="btn btn-link text-secondary p-0" title="Edit Data"><i class="fa-solid fa-pen-to-square"></i></button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}
