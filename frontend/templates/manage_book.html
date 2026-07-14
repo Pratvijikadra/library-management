@@ -15,8 +15,8 @@
           <h6 class="text-muted text-uppercase small fw-bold mb-1">Total Books</h6>
           <h3 class="fw-bold text-dark m-0">{{ books|length }}</h3>
         </div>
-        <div class="bg-primary-subtle text-primary rounded-circle p-3 fs-3">
-          <i class="fa-solid fa-tags"></i>
+        <div class="bg-primary-subtle text-derk rounded-circle p-3 fs-4">
+           <i class="fa-solid fa-book"></i>
         </div>
       </div>
     </div>
@@ -33,48 +33,48 @@
   </div>
 
   <div class="w-100 table-responsive" style="overflow-x: auto; display: block">
-    <table class="table table-hover align-middle mb-0 text-nowrap table-bordered" >
+    <table class="table table-hover align-middle mb-0 text-nowrap" style="border-collapse: separate; ">
       <thead>
         <tr class="text-secondary opacity-70 border-bottom-2">
-          <th class="pb-3 fw-semibold text-center" style="width: 80px">S.No.</th>
-          <th class="pb-3 fw-semibold" style="min-width: 200px">Book Title</th>
-          <th class="pb-3 fw-semibold">ISBN</th>
-          <th class="pb-3 fw-semibold">Author</th>
-          <th class="pb-3 fw-semibold">Publisher</th>
-          <th class="pb-3 fw-semibold">Category</th>
-          <th class="pb-3 fw-semibold">Language</th>
-          <th class="pb-3 fw-semibold">Edition</th>
-          <th class="pb-3 fw-semibold">Published Year</th>
-          <th class="pb-3 fw-semibold">Pages</th>
-          <th class="pb-3 fw-semibold">Shelf No</th>
-          <th class="pb-3 fw-semibold">Total Copies</th>
-          <th class="pb-3 fw-semibold">Available Copies</th>
-          <th class="pb-3 fw-semibold" style="min-width: 250px">Description</th>
-          <th class="pb-3 fw-semibold">Status</th>
-          <th class="pb-3 fw-semibold text-center">Actions</th>
+          <th class="pb-3 fw-semibold text-center" style="width: 80px; border: 1px solid #dee2e6;">S.No.</th>
+          <th class="pb-3 fw-semibold" style="min-width: 200px; border: 1px solid #dee2e6;">Book Title</th>
+          <th class="pb-3 fw-semibold" style="border: 1px solid #dee2e6;">ISBN</th>
+          <th class="pb-3 fw-semibold" style="border: 1px solid #dee2e6;">Author</th>
+          <th class="pb-3 fw-semibold" style="border: 1px solid #dee2e6;">Publisher</th>
+          <th class="pb-3 fw-semibold" style="border: 1px solid #dee2e6;">Category</th>
+          <th class="pb-3 fw-semibold" style="border: 1px solid #dee2e6;">Language</th>
+          <th class="pb-3 fw-semibold" style="border: 1px solid #dee2e6;">Edition</th>
+          <th class="pb-3 fw-semibold" style="border: 1px solid #dee2e6;">Published Year</th>
+          <th class="pb-3 fw-semibold" style="border: 1px solid #dee2e6;">Pages</th>
+          <th class="pb-3 fw-semibold" style="border: 1px solid #dee2e6;">Shelf No</th>
+          <th class="pb-3 fw-semibold" style="border: 1px solid #dee2e6;">Total Copies</th>
+          <th class="pb-3 fw-semibold" style="border: 1px solid #dee2e6;">Available Copies</th>
+          <th class="pb-3 fw-semibold" style="min-width: 250px; border: 1px solid #dee2e6;">Description</th>
+          <th class="pb-3 fw-semibold" style="border: 1px solid #dee2e6;">Status</th>
+          <th class="pb-3 fw-semibold text-center" style="border: 1px solid #dee2e6;">Actions</th>
         </tr>
       </thead>
       <tbody>
         {% for book in books %}
         <tr id="row-{{ book.isbn }}">
-          <td class="text-center fw-medium text-secondary index-cell">{{ loop.index }}</td>
+          <td class="text-center fw-medium text-secondary index-cell" style="border: 1px solid #dee2e6;">{{ loop.index }}</td>
 
-          <td>
+          <td style="border: 1px solid #dee2e6;">
             <span class="view-mode fw-semibold text-dark text-wrap d-block" style="max-width: 220px">{{ book.title }}</span>
             <input type="text" class="form-control form-control-sm edit-mode d-none data-title" value="{{ book.title }}" required />
           </td>
-          <td>
+          <td style="border: 1px solid #dee2e6;">
             <span class="fw-muted data-isbn">{{ book.isbn }}</span>
           </td>
-          <td>
+          <td style="border: 1px solid #dee2e6;">
             <span class="view-mode">{{ book.author_name }}</span>
             <input type="text" class="form-control form-control-sm edit-mode d-none data-author_name" value="{{ book.author_name }}" required />
           </td>
-          <td>
+          <td style="border: 1px solid #dee2e6;">
             <span class="view-mode">{{ book.publisher_name }}</span>
             <input type="text" class="form-control form-control-sm edit-mode d-none data-publisher_name" value="{{ book.publisher_name }}" required />
           </td>
-          <td>
+          <td style="border: 1px solid #dee2e6;">
             <span class="view-mode">{{ book.category_name }}</span>
             <select class="form-select form-select-sm edit-mode d-none data-category_name" required>
               {% for category in categories %}
@@ -82,7 +82,7 @@
               {% endfor %}
             </select>
           </td>
-          <td>
+          <td style="border: 1px solid #dee2e6;">
             <span class="view-mode">{{ book.language }}</span>
             <select class="form-select form-select-sm edit-mode d-none data-language" required>
               {% for lang in languages %}
@@ -90,35 +90,35 @@
               {% endfor %}
             </select>
           </td>
-          <td>
+          <td style="border: 1px solid #dee2e6;">
             <span class="view-mode">{{ book.edition }}</span>
             <input type="text" class="form-control form-control-sm edit-mode d-none data-edition" value="{{ book.edition }}" required />
           </td>
-          <td>
+          <td style="border: 1px solid #dee2e6;">
             <span class="view-mode">{{ book.published_year }}</span>
             <input type="number" class="form-control form-control-sm edit-mode d-none data-published_year" value="{{ book.published_year }}" required />
           </td>
-          <td>
+          <td style="border: 1px solid #dee2e6;">
             <span class="view-mode">{{ book.pages }}</span>
             <input type="number" class="form-control form-control-sm edit-mode d-none data-pages" value="{{ book.pages }}" required />
           </td>
-          <td>
+          <td style="border: 1px solid #dee2e6;">
             <span class="view-mode">{{ book.shelf_no }}</span>
             <input type="text" class="form-control form-control-sm edit-mode d-none data-shelf_no" value="{{ book.shelf_no }}" required />
           </td>
-          <td>
+          <td style="border: 1px solid #dee2e6;">
             <span class="view-mode">{{ book.total_copies }}</span>
             <input type="number" class="form-control form-control-sm edit-mode d-none data-total_copies" value="{{ book.total_copies }}" required />
           </td>
-          <td>
+          <td style="border: 1px solid #dee2e6;">
             <span class="view-mode">{{ book.available_copies }}</span>
             <input type="number" class="form-control form-control-sm edit-mode d-none data-available_copies" value="{{ book.available_copies }}" required />
           </td>
-          <td>
+          <td style="border: 1px solid #dee2e6;">
             <span class="view-mode text-wrap text-muted small d-block" style="max-width: 280px">{{ book.description or '-' }}</span>
             <textarea class="form-control form-control-sm edit-mode d-none data-description">{{ book.description or '' }}</textarea>
           </td>
-          <td>
+          <td style="border: 1px solid #dee2e6;">
 <span class="view-mode badge rounded-pill px-3 py-1 fw-semibold
   {% if book.status.lower() == 'available' %}
     bg-success-subtle text-success
@@ -140,7 +140,7 @@
               <option value="Lost" {% if book.status == 'Lost' %}selected{% endif %}>Lost</option>
             </select>
           </td>
-          <td class="text-center">
+          <td class="text-center" style="border: 1px solid #dee2e6;">
             <div class="view-actions d-flex align-items-center justify-content-center gap-2">
               <button type="button" class="btn btn-sm btn-link text-primary p-0 text-decoration-none" title="Edit Book" onclick="toggleRowEdit('{{ book.isbn }}', true)">
                 Edit

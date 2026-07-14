@@ -26,3 +26,4 @@ users_collection = db["users"] #collection
 books_collection = db["books"]
 categories_collection = db["categories"]
 languages_collection = db["languages"]
+otps_collection = db["otp"]

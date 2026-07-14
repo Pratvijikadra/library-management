@@ -1,90 +1,145 @@
-{% extends './admin_base.html' %} {% block title %} Admin Dashboard {% endblock %} {% block content %}
+{% extends "admin_base.html" %} 
 
-<!-- Main Workspace Dashboard Data -->
+{% block title %}Admin Dashboard - Library System{% endblock %} 
 
-<!-- Quick Stats Layout -->
+{% block nav_dashboard %}active{% endblock %} 
+
+{% block page_heading %}Admin Dashboard{% endblock %} 
+
+{% block content %}
+
+
+<div class="alert alert-primary-subtle border-0 rounded-3">
+        <h6 class="fw-bold text-dark mb-1">Welcome Admin!</h6>
+        <p class="small text-secondary mb-2">You are logged into the library management system. now you can manage overall system here.</p>
+      </div>
+
+
+<!-- 📊 KEY METRICS COUNTER GRID SECTION -->
 <div class="row g-4 mb-4">
-  <!-- Total Stock Info -->
-  <div class="col-12 col-md-4">
-    <div class="custom-card p-4 d-flex align-items-center shadow-sm">
-      <div class="icon-box">
-        <i class="fa-solid fa-book-bookmark fs-5"></i>
-      </div>
-      {% if books %} {% for book in books %}
-      <div class="ms-3">
-        <small class="text-muted d-block fw-medium">Total Registered Books</small>
-        <span class="fs-3 fw-bold">{{ book.title }}</span>
-      </div>
-      {% endfor %} {% endif %}
-    </div>
-  </div>
-  <!-- Total Registered Readers -->
-  <div class="col-12 col-md-4">
-    <div class="custom-card p-4 d-flex align-items-center shadow-sm">
-      <div class="icon-box">
-        <i class="fa-solid fa-users fs-5"></i>
-      </div>
-      <div class="ms-3">
-        <small class="text-muted d-block fw-medium">Active Registered Members</small>
-        <span class="fs-3 fw-bold">452</span>
+  <!-- Metric Card: Total Books -->
+  <div class="col-xl-3 col-md-6">
+    <div class="custom-card p-4 shadow-sm border-start border-dark border-4 rounded-3 bg-white h-100">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <h6 class="text-muted text-uppercase small fw-bold mb-1">Total Books</h6>
+          <!-- Backend should pass total_books count dynamically -->
+          <h3 class="fw-bold text-dark m-0">{{ total_books if total_books is defined else '1,248' }}</h3>
+        </div>
+        <div class="bg-primary-subtle text-dark rounded-circle p-3 fs-3 d-flex align-items-center justify-content-center" style="width: 55px; height: 55px;">
+          <i class="fa-solid fa-book"></i>
+        </div>
       </div>
     </div>
   </div>
-  <!-- Total Live Rented/Issued Books -->
-  <div class="col-12 col-md-4">
-    <div class="custom-card p-4 d-flex align-items-center shadow-sm">
-      <div class="icon-box">
-        <i class="fa-solid fa-book-open fs-5"></i>
+
+  <!-- Metric Card: Active Categories -->
+  <div class="col-xl-3 col-md-6">
+    <div class="custom-card p-4 shadow-sm border-start border-dark border-4 rounded-3 bg-white h-100">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <h6 class="text-muted text-uppercase small fw-bold mb-1">Active Categories</h6>
+          <!-- Backend should pass total_categories count dynamically -->
+          <h3 class="fw-bold text-dark m-0">{{ total_categories if total_categories is defined else '42' }}</h3>
+        </div>
+        <div class="bg-primary-subtle text-dark rounded-circle p-3 fs-3 d-flex align-items-center justify-content-center" style="width: 55px; height: 55px;">
+          <i class="fa-solid fa-tags"></i>
+        </div>
       </div>
-      <div class="ms-3">
-        <small class="text-muted d-block fw-medium">Total Books Transacted</small>
-        <span class="fs-3 fw-bold">115</span>
+    </div>
+  </div>
+
+  <!-- Metric Card: Issued Books -->
+  <div class="col-xl-3 col-md-6">
+    <div class="custom-card p-4 shadow-sm border-start border-dark border-4 rounded-3 bg-white h-100">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <h6 class="text-muted text-uppercase small fw-bold mb-1">Books Issued</h6>
+          <h3 class="fw-bold text-dark m-0">184</h3>
+        </div>
+        <div class="bg-primary-subtle text-dark rounded-circle p-3 fs-3 d-flex align-items-center justify-content-center" style="width: 55px; height: 55px;">
+          <i class="fa-solid fa-book-reader"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Metric Card: Overdue Returns -->
+  <div class="col-xl-3 col-md-6">
+    <div class="custom-card p-4 shadow-sm border-start border-dark border-4 rounded-3 bg-white h-100">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <h6 class="text-muted text-uppercase small fw-bold mb-1">Overdue Items</h6>
+          <h3 class="fw-bold r m-0">12</h3>
+        </div>
+        <div class="bg-primary-subtle text-dark rounded-circle p-3 fs-3 d-flex align-items-center justify-content-center" style="width: 55px; height: 55px;">
+         <i class="fa-regular fa-clock"></i>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Main Interactive Book Log Component -->
-<div class="custom-card p-4 shadow-sm">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h5 class="m-0 fw-bold">Recently Registered Books</h5>
-    <button class="btn btn-primary-custom px-4 py-2 text-sm fw-medium rounded d-flex align-items-center gap-2"><i class="fa-solid fa-plus"></i> Add New Book</button>
-  </div>
+<!-- 📈 DATA ANALYTICS & RECENT ACTIVITIES SPLIT SECTION -->
+<div class="row g-4">
 
-  <!-- Tabular Book Summary View -->
-  <div class="table-responsive">
-    <table class="table table-hover align-middle mb-0">
-      <thead>
-        <tr class="text-secondary opacity-70 border-bottom-2">
-          <th class="pb-3 fw-semibold">Book Title</th>
-          <th class="pb-3 fw-semibold">ISBN Identifier</th>
-          <th class="pb-3 fw-semibold">Category Type</th>
-          <th class="pb-3 fw-semibold">Status</th>
-          <th class="pb-3 fw-semibold text-center">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td class="fw-semibold text-dark">The Golden Success</td>
-          <td class="text-muted">978-3-16-14841</td>
-          <td>Motivation</td>
-          <td><span class="badge bg-success-subtle text-success fw-bold px-2 py-1.5 rounded-pill">Available</span></td>
-          <td class="text-center">
-            <button class="btn btn-link text-secondary p-0" title="Edit Data"><i class="fa-solid fa-pen-to-square"></i></button>
-          </td>
-        </tr>
-        <tr>
-          <td class="fw-semibold text-dark">Python for Beginners</td>
-          <td class="text-muted">978-1-23-45678</td>
-          <td>Technology</td>
-          <td><span class="badge bg-warning-subtle text-warning fw-bold px-2 py-1.5 rounded-pill">Issued</span></td>
-          <td class="text-center">
-            <button class="btn btn-link text-secondary p-0" title="Edit Data"><i class="fa-solid fa-pen-to-square"></i></button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+
+  <!-- Right Side: System Status & Shortcuts -->
+  <div class="col-lg-12">
+    <div class="custom-card py-2 px-4 shadow-sm bg-white rounded-3 h-100">
+        <!-- Welcome Banner Card Block Container -->
+      
+      <h5 class="fw-bold text-dark mb-4">Quick Control Hub</h5>
+      
+      <!-- Shortcut Links Grid Configuration -->
+      <div class="row g-3">
+         <div class="col-4">
+          <!-- Adjust link routing based on your books control architecture -->
+          <a href="/manage-books" class="btn btn-light w-100 p-3 rounded-3 text-start hover-shadow transition d-block text-decoration-none border">
+            <div class="fw-bold text-dark small">Manage Books</div>
+            <small class="text-muted extra-small">All details of books with Add, Update and Delete Books </small>
+          </a>
+        </div>
+        <div class="col-4">
+          <a href="/categories" class="btn btn-light w-100 p-3 rounded-3 text-start hover-shadow transition d-block text-decoration-none border">
+        
+            <div class="fw-bold text-dark small">Manage Categories</div>
+            <small class="text-muted extra-small">Add, Update and Delete Categories</small>
+          </a>
+        </div>
+        
+       
+ <div class="col-4">
+          <!-- Adjust link routing based on your books control architecture -->
+          <a href="/languages" class="btn btn-light w-100 p-3 rounded-3 text-start hover-shadow transition d-block text-decoration-none border">
+            <div class="fw-bold text-dark small">Manage Languages</div>
+            <small class="text-muted extra-small">Add, Update and Delete Languages</small>
+          </a>
+        </div>
+
+     
+       
+ <div class="col-4">
+          <!-- Adjust link routing based on your books control architecture -->
+          <a href="/members" class="btn btn-light w-100 p-3 rounded-3 text-start hover-shadow transition d-block text-decoration-none border">
+            <div class="fw-bold text-dark small">Members</div>
+            <small class="text-muted extra-small">All members details.</small>
+          </a>
+        </div>
+     
+       
+ <div class="col-4">
+          <!-- Adjust link routing based on your books control architecture -->
+          <a href="/issue-return" class="btn btn-light w-100 p-3 rounded-3 text-start hover-shadow transition d-block text-decoration-none border">
+            <div class="fw-bold text-dark small">Issue and Return</div>
+            <small class="text-muted extra-small">Issue and Return Books details.</small>
+          </a>
+        </div>
+
+      </div>
+
+    
+    </div>
   </div>
 </div>
-
 {% endblock %}

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Library Management System{% endblock %}</title>
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome 6 for Professional Library Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Global CSS Layout Engine with Variable Theme Injection -->
+    <style>
+        :root {
+            /* 🎨 THEME COLOR VARIABLES - Update here to shift the whole UI look */
+            --primary-theme: #0A5C36;       /* Deep Emerald Green (Primary Actions, Identity) */
+            --primary-hover: #074326;       /* Darker Emerald for focus states */
+            --accent-theme: #20C997;        /* Crisp Mint Green (Highlights, Badges, Metrics) */
+            --dark-neutral: #1E293B;        /* Slate Dark (Typography, Strong Headers) */
+            --light-neutral: #F8FAFC;       /* Off-White Canvas background */
+            --border-neutral: #E2E8F0;      /* Clean soft borders */
+        }
+
+        body {
+            background-color: var(--light-neutral);
+            color: var(--dark-neutral);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ⚓ Custom Navigation Bar Styling */
+        .navbar-custom {
+            background-color: var(--primary-theme);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+
+        .navbar-custom .navbar-brand, 
+        .navbar-custom .nav-link {
+            color: rgba(255, 255, 255, 0.9) !important;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .navbar-custom .nav-link:hover,
+        .navbar-custom .nav-item.active .nav-link {
+            color: #FFFFFF !important;
+            text-shadow: 0 0 8px rgba(32, 201, 151, 0.6);
+        }
+
+        .navbar-custom .navbar-brand i {
+            color: var(--accent-theme);
+        }
+
+        /* 📁 Shared Component Enhancements */
+        .btn-theme-primary {
+            background-color: var(--primary-theme);
+            color: white;
+            border: none;
+            transition: all 0.2s ease;
+        }
+
+        .btn-theme-primary:hover, .btn-theme-primary:focus {
+            background-color: var(--primary-hover);
+            color: white;
+            box-shadow: 0 4px 12px rgba(10, 92, 54, 0.25);
+        }
+
+        .badge-accent {
+            background-color: rgba(32, 201, 151, 0.15);
+            color: var(--primary-hover);
+            border: 1px solid rgba(32, 201, 151, 0.3);
+        }
+
+        /* Footer Sticky Fix */
+        footer {
+            margin-top: auto;
+            border-top: 1px solid var(--border-neutral);
+            background-color: #FFFFFF;
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <!-- 🧭 TOP CORE NAVIGATION GATEWAY -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom py-2">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center gap-2 href="/" >
+                <i class="fa-solid fa-book-open-reader fs-4"></i>
+                <span class="fw-bold tracking-tight">LMS Hub</span>
+            </a>
+            
+            <button class="navbar-expand-button navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainLibraryNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="mainLibraryNavbar">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 gap-1">
+                    <li class="nav-item {% block nav_home %}{% endblock %}">
+                        <a class="nav-link" href="/"><i class="fa-solid fa-house me-1 small"></i> Catalog</a>
+                    </li>
+                    <li class="nav-item {% block nav_my_books %}{% endblock %}">
+                        <a class="nav-link" href="/my-loans"><i class="fa-solid fa-bookmark me-1 small"></i> My Loans</a>
+                    </li>
+                </ul>
+                
+                <!-- Authentication State Buttons Holder -->
+                <div class="d-flex align-items-center gap-3">
+                    <span id="userGreeting" class="text-white-50 small d-none"></span>
+                    <a href="/login" id="navLoginBtn" class="btn btn-sm btn-outline-light px-3 rounded-pill">Sign In</a>
+                    <a href="/register" id="navRegisterBtn" class="btn btn-sm btn-theme-primary px-3 rounded-pill" style="border: 1px solid rgba(255,255,255,0.2)">Register</a>
+                    <button id="navLogoutBtn" class="btn btn-sm btn-link text-white-50 text-decoration-none d-none" onclick="handleUserLogout()"><i class="fa-solid fa-power-off me-1"></i> Logout</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 🏗️ DYNAMIC PAGE CONTAINER WORKSPACE -->
+    <main class="container py-4 my-2">
+        {% block content %}
+        <!-- Child pages inject structural content nodes directly inside this block space -->
+
+        <!-- 🍞 UNIVERSAL DYNAMIC TOAST SYSTEM -->
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100">
+  <div id="liveToast" class="toast align-items-center text-white border-0 shadow" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body d-flex align-items-center gap-2">
+        <i id="toastIcon" class="fa-solid"></i>
+        <span id="toastMessage">Processing...</span>
+      </div>
+      <button type="button" class="btn-close btn-close-white m-auto me-2" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+</div>
+        {% endblock %}
+    </main>
+
+    <!-- 🌐 SHARED FOOTER ARCHITECTURE -->
+    <footer class="py-3 bg-white">
+        <div class="container text-center">
+            <p class="text-muted small mb-0">&copy; 2026 Library Management System Engine. Managed under Secure Session Handlers.</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap 5 Bundle with Popper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Global Client Session Token Validation Script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Read authentication parameters from client storage
+            const token = localStorage.getItem("user_access_token");
+            const loginBtn = document.getElementById("navLoginBtn");
+            const registerBtn = document.getElementById("navRegisterBtn");
+            const logoutBtn = document.getElementById("navLogoutBtn");
+            const greeting = document.getElementById("userGreeting");
+
+            if (token) {
+                // If a JWT session string is found, toggle access visibility layouts
+                if(loginBtn) loginBtn.classList.add("d-none");
+                if(registerBtn) registerBtn.classList.add("d-none");
+                if(logoutBtn) logoutBtn.classList.remove("d-none");
+                
+                // Optional: Read payload parameters if parsing logic exists
+                if(greeting) {
+                    greeting.textContent = "Session Active";
+                    greeting.classList.remove("d-none");
+                }
+            }
+        });
+
+        function handleUserLogout() {
+            // Clean client cache strings and redirect window state to root
+            localStorage.removeItem("user_access_token");
+            // document.cookie = "user_access_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC; SameSite=Strict;";
+            window.location.href = "/login";
+        }
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,20 +1,20 @@
 {% extends "admin_base.html" %} 
-{% block title %}Manage Categories - Library System{% endblock %} 
-{% block nav_categories %}active{% endblock %} 
-{% block page_heading %}Category Management{% endblock %} 
+{% block title %}Manage Languages - Library System{% endblock %} 
+{% block nav_languages %}active{% endblock %} 
+{% block page_heading %}Language Management{% endblock %} 
 
 {% block content %}
-<!-- 📊 METRICS SECTION (Total Categories Indicator) -->
+<!-- 📊 METRICS SECTION (Total Languages Indicator) -->
 <div class="row mb-4">
   <div class="col-md-4">
     <div class="custom-card p-4 shadow-sm border-start border-dark border-4 rounded-3 bg-white">
       <div class="d-flex align-items-center justify-content-between">
         <div>
-          <h6 class="text-muted text-uppercase small fw-bold mb-1">Total Categories</h6>
-          <h3 class="fw-bold text-dark m-0">{{ categories|length }}</h3>
+          <h6 class="text-muted text-uppercase small fw-bold mb-1">Total Languages</h6>
+          <h3 class="fw-bold text-dark m-0">{{ languages|length }}</h3>
         </div>
         <div class="bg-primary-subtle text-dark rounded-circle p-3 fs-4">
-          <i class="fa-solid fa-tags"></i>
+          <i class="fa-solid fa-language w-25"></i>
         </div>
       </div>
     </div>
@@ -24,9 +24,9 @@
 <!-- 📋 MAIN CATEGORY TABLE CARD -->
 <div class="custom-card p-4 shadow-sm bg-white rounded-3">
   <div class="d-flex justify-content-between align-items-center mb-4">
-    <h5 class="m-0 fw-bold text-dark">Category Inventory Logs</h5>
-    <button class="btn btn-primary-custom px-4 py-2 text-sm fw-medium rounded d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
-      <i class="fa-solid fa-plus"></i> Add New Category
+    <h5 class="m-0 fw-bold text-dark">Language Inventory Logs</h5>
+    <button class="btn btn-primary-custom px-4 py-2 text-sm fw-medium rounded d-flex align-items-center gap-2" data-bs-toggle="modal" data-bs-target="#addLanguageModal">
+      <i class="fa-solid fa-plus"></i> Add New Language
     </button>
   </div>
 
@@ -35,43 +35,40 @@
       <thead>
         <tr class="text-secondary opacity-70" style="background-color: #f8f9fa;">
           <th class="py-3 px-4 fw-semibold text-center" style="border: 1px solid #dee2e6; width: 100px;">S.No.</th>
-          <th class="py-3 px-4 fw-semibold" style="border: 1px solid #dee2e6;">Category Name</th>
-       
+          <th class="py-3 px-4 fw-semibold" style="border: 1px solid #dee2e6;">Language Name</th>
           <th class="py-3 px-4 fw-semibold text-center" style="border: 1px solid #dee2e6; width: 150px;">Actions</th>
         </tr>
       </thead>
       <tbody>
-        {% for category in categories %}
+        {% for language in languages %}
         <!-- Note: id me hum category.id use kar rahe hain uniquely identify karne ke liye -->
-        <tr id="row-{{ category.id }}">
+        <tr id="row-{{ language.id }}">
           <td class="text-center fw-medium text-secondary index-cell px-4" style="border: 1px solid #dee2e6; padding-top: 12px; padding-bottom: 12px;">{{ loop.index }}</td>
           
           <td class="px-4" style="border: 1px solid #dee2e6;">
-            <span class="view-mode fw-semibold text-dark">{{ category.name }}</span>
-            <input type="text" class="form-control form-control-sm edit-mode d-none data-name" value="{{ category.name }}" required />
+            <span class="view-mode fw-semibold text-dark">{{ language.name }}</span>
+            <input type="text" class="form-control form-control-sm edit-mode d-none data-name" value="{{ language.name }}" required />
           </td>
-          
-          
           
           <td class="text-center px-4" style="border: 1px solid #dee2e6;">
             <div class="view-actions d-flex align-items-center justify-content-center gap-2">
-              <button type="button" class="btn btn-sm btn-link text-primary p-0" title="Edit Category" onclick="toggleRowEdit('{{ category.id }}', true)">
+              <button type="button" class="btn btn-sm btn-link text-primary p-0" title="Edit Language" onclick="toggleRowEdit('{{ language.id }}', true)">
                 <i class="fa-solid fa-pen-to-square fs-5"></i>
               </button>
-              <button type="button" class="btn btn-sm btn-link text-danger p-0 ms-1" title="Delete Category" onclick="triggerDeleteModal('{{ category.id }}', '{{ category.name|safe }}')">
+              <button type="button" class="btn btn-sm btn-link text-danger p-0 ms-1" title="Delete Language" onclick="triggerDeleteModal('{{ language.id }}', '{{ language.name|safe }}')">
                 <i class="fa-solid fa-trash-can fs-5"></i>
               </button>
             </div>
             <div class="edit-actions d-none align-items-center justify-content-center gap-2">
-              <button type="button" class="btn btn-sm btn-success px-2 py-1 text-xs fw-medium rounded shadow-sm" onclick="saveRowInline('{{ category.id }}')">Save</button>
-              <button type="button" class="btn btn-sm btn-secondary px-2 py-1 text-xs fw-medium rounded shadow-sm" onclick="toggleRowEdit('{{ category.id }}', false)">Cancel</button>
+              <button type="button" class="btn btn-sm btn-success px-2 py-1 text-xs fw-medium rounded shadow-sm" onclick="saveRowInline('{{ language.id }}')">Save</button>
+              <button type="button" class="btn btn-sm btn-secondary px-2 py-1 text-xs fw-medium rounded shadow-sm" onclick="toggleRowEdit('{{ language.id }}', false)">Cancel</button>
             </div>
           </td>
         </tr>
         {% else %}
         <tr>
           <td colspan="4" class="text-center text-muted py-5" style="border: 1px solid #dee2e6;">
-            <i class="fa-regular fa-folder-open fs-2 d-block mb-2 text-secondary opacity-50"></i>No categories available.
+            <i class="fa-regular fa-folder-open fs-2 d-block mb-2 text-secondary opacity-50"></i>No languages available.
           </td>
         </tr>
         {% endfor %}
@@ -80,24 +77,23 @@
   </div>
 </div>
 
-<!-- ➕ ADD NEW CATEGORY MODAL -->
-<div class="modal fade" id="addCategoryModal" tabindex="-1" aria-hidden="true">
+<!-- ➕ ADD NEW LANGUAGE MODAL -->
+<div class="modal fade" id="addLanguageModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
-    <form id="addCategoryForm" class="modal-content rounded-3 border-0 shadow">
+    <form id="addLanguageForm" class="modal-content rounded-3 border-0 shadow">
       <div class="modal-header border-0 bg-light py-3">
-        <h5 class="modal-title fw-bold text-dark">Add New Category</h5>
+        <h5 class="modal-title fw-bold text-dark">Add New Language</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body p-4">
         <div class="mb-3">
-          <label for="categoryName" class="form-label fw-semibold text-secondary">Category Name</label>
-          <input type="text" class="form-control" id="categoryName" required placeholder="e.g. Science Fiction, Mathematics" />
+          <label for="languageName" class="form-label fw-semibold text-secondary">Language Name</label>
+          <input type="text" class="form-control" id="languageName" required placeholder="e.g. Science Fiction, Mathematics" />
         </div>
-    
       </div>
       <div class="modal-footer border-0 bg-light py-3">
         <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal">Cancel</button>
-        <button type="submit" class="btn btn-primary-custom px-4">Save Category</button>
+        <button type="submit" class="btn btn-primary-custom px-4">Save Language</button>
       </div>
     </form>
   </div>
@@ -111,8 +107,8 @@
         <div class="text-danger mb-3">
           <i class="fa-solid fa-triangle-exclamation display-4"></i>
         </div>
-        <h5 class="fw-bold text-dark mb-2">Delete Category?</h5>
-        <p class="text-muted small mb-4">Are you sure you want to permanently delete <strong id="deleteTargetName" class="text-dark"></strong>? Books linked under this category might get affected.</p>
+        <h5 class="fw-bold text-dark mb-2">Delete Language?</h5>
+        <p class="text-muted small mb-4">Are you sure you want to permanently delete <strong id="deleteTargetName" class="text-dark"></strong>? Books linked under this language might get affected.</p>
         <div class="d-flex justify-content-center gap-2">
           <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Cancel</button>
           <button type="button" class="btn btn-danger px-4" id="confirmDeleteBtn">Delete</button>
@@ -191,11 +187,10 @@
 
     const payload = {
       name: row.querySelector(".data-name").value.trim(),
-     
     };
 
     try {
-      const response = await fetch(`/update-category/${id}`, {
+      const response = await fetch(`/update-language/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
@@ -204,10 +199,10 @@
       const result = await response.json();
 
       if (response.ok) {
-        showToast("Category updated cleanly in real-time!", true);
+        showToast("Language updated cleanly in real-time!", true);
         setTimeout(() => window.location.reload(), 1200);
       } else {
-        throw new Error(result.detail || "Error processing category mutation.");
+        throw new Error(result.detail || "Error processing language mutation.");
       }
     } catch (error) {
       showToast(error.message, false);
@@ -215,16 +210,15 @@
   }
 
   // ➕ CREATE METHOD (Form Submit Modal)
-  document.getElementById("addCategoryForm").addEventListener("submit", async function (e) {
+  document.getElementById("addLanguageForm").addEventListener("submit", async function (e) {
     e.preventDefault();
 
     const formData = {
-      name: document.getElementById("categoryName").value.trim(),
-     
+      name: document.getElementById("languageName").value.trim(),
     };
 
     try {
-      const response = await fetch("/add-category", {
+      const response = await fetch("/add-language", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -233,12 +227,12 @@
       const result = await response.json();
 
       if (response.ok) {
-        showToast(result.message || "Category created successfully!", true);
-        bootstrap.Modal.getInstance(document.getElementById("addCategoryModal")).hide();
-        document.getElementById("addCategoryForm").reset();
+        showToast(result.message || "Language created successfully!", true);
+        bootstrap.Modal.getInstance(document.getElementById("addLanguageModal")).hide();
+        document.getElementById("addLanguageForm").reset();
         setTimeout(() => window.location.reload(), 1200);
       } else {
-        // Backend agar check karke "Category already exists" throw karega to ye handle karega
+        // Backend agar check karke "Language already exists" throw karega to ye handle karega
         throw new Error(result.detail || "Validation check configurations caught errors.");
       }
     } catch (error) {
@@ -262,14 +256,14 @@
     }
 
     try {
-      const response = await fetch(`/delete-category/${activeDeleteId}`, {
+      const response = await fetch(`/delete-language/${activeDeleteId}`, {
         method: "DELETE",
       });
 
       const result = await response.json();
 
       if (response.ok) {
-        showToast("Category record removed successfully.", true);
+        showToast("Language removed successfully.", true);
         setTimeout(() => window.location.reload(), 1200);
       } else {
         throw new Error(result.detail || "Delete operation transaction execution error.");

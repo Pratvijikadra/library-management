@@ -25,6 +25,14 @@ templates = Jinja2Templates(directory="frontend/templates")
 #     except Exception as e:
 #         raise HTTPException(status_code=500, detail=str(e))
 
+
+
+
+
+
+
+
+
 @router.post("/add-book")
 async def add_book(book_data: Books):
     try:
@@ -186,6 +194,12 @@ def category_helper(category) -> dict:
         "description": category.get("description", "")  # description field ko bhi secure kiy
     }
 
+def language_helper(language):
+    return{
+        "id":str(language["_id"]),
+        "name":language["name"]
+    }
+
 
 
 @router.get("/categories", response_class=HTMLResponse)
@@ -222,7 +236,7 @@ async def add_category(category: CategorySchema):
         if exists:
             raise HTTPException(status_code=400, detail="Category already exists!")
         
-        categories_collection.insert_one({"name": category.name, "description": getattr(category, "description", "")})
+        categories_collection.insert_one({"name": category.name})
         return {"message": f"Category '{category.name}' added successfully"}
     except HTTPException as http_ex:
         raise http_ex
@@ -248,8 +262,7 @@ async def update_category(category_id: str, category: CategorySchema):
         result = categories_collection.update_one(
             {"_id": ObjectId(category_id)},
             {"$set": {
-                "name": category.name,
-                "description": getattr(category, 'description', '')
+                "name": category.name
             }}
         )
         
@@ -285,7 +298,36 @@ async def delete_category(category_id: str):
 
 # ==================== LANGUAGE APIS ====================
 
-@router.post("/languages", response_model=dict, status_code=201)
+
+
+
+@router.get("/languages", response_class=HTMLResponse)
+async def languages_page(request: Request):
+    try:
+        cursor = languages_collection.find({}).sort("name", 1)
+        languages = [language_helper(lang) for lang in cursor]
+        
+        return templates.TemplateResponse(
+            request,
+            "manage_languages.html", 
+            {"request": request, "languages": languages}
+        )
+    except Exception as e:
+        print("ERROR:", str(e))
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/api/languages", response_model=List[LanguageSchema])
+async def get_all_languages():
+    try:
+        cursor = languages_collection.find({}).sort("name", 1)
+        languages = [language_helper(lang) for lang in cursor]
+        return languages
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/add-language", response_model=dict, status_code=201)
 async def add_language(language: LanguageSchema):
     try:
         # check if language is available or not
@@ -300,14 +342,82 @@ async def add_language(language: LanguageSchema):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@router.get("/languages", response_model=List[LanguageSchema])
-async def get_all_languages():
+
+
+
+
+
+        
+
+@router.put("/update-language/{language_id}", response_model=dict)
+async def update_language(language_id: str, language: LanguageSchema):
     try:
-        # Sort languages 
-        languages = list(languages_collection.find({}, {"_id": 0}).sort("name", 1))
-        return languages
+        if not ObjectId.is_valid(language_id):
+            raise HTTPException(status_code=400, detail="Invalid Language ID format")
+            
+        # Check duplicate name: jis language ko badal rahe hain uske alawa kisi aur ka same name na ho
+        exists = languages_collection.find_one({
+            "_id": {"$ne": ObjectId(language_id)},
+            "name": {"$regex": f"^{language.name}$", "$options": "i"}
+        })
+        if exists:
+            raise HTTPException(status_code=400, detail="Another language with this name already exists!")
+
+        result = languages_collection.update_one(
+            {"_id": ObjectId(language_id)},
+            {"$set": {
+                "name": language.name
+            }}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Language not found!")
+            
+        return {"message": "Language updated cleanly in real-time!"}
+    except HTTPException as http_ex:
+        raise http_ex
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+
+
+
+
+@router.delete("/delete-language/{language_id}", response_model=dict)
+async def delete_language(language_id: str):
+    try:
+        if not ObjectId.is_valid(language_id):
+            raise HTTPException(status_code=400, detail="Invalid Language ID format")
+            
+        result = languages_collection.delete_one({"_id": ObjectId(language_id)})
+        
+        if result.deleted_count == 0:
+            raise HTTPException(status_code=404, detail="Language not found or already deleted!")
+            
+        return {"message": "Language record removed successfully."}
+    except HTTPException as http_ex:
+        raise http_ex
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+
+# @router.get("/api/languages", response_model=List[LanguageSchema])
+# async def get_all_languages():
+#     try:
+#         # Sort languages 
+#         languages = list(languages_collection.find({}, {"_id": 0}).sort("name", 1))
+#         return languages
+#     except Exception as e:
+#         raise HTTPException(status_code=500, detail=str(e))
+
+
+
+
+
+
+
 
 @router.get("/manage-books", response_class=HTMLResponse)
 async def get_manage_books_page(request: Request):
