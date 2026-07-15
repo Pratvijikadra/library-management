@@ -49,7 +49,9 @@
           <th class="pb-3 fw-semibold" style="border: 1px solid #dee2e6;">Shelf No</th>
           <th class="pb-3 fw-semibold" style="border: 1px solid #dee2e6;">Total Copies</th>
           <th class="pb-3 fw-semibold" style="border: 1px solid #dee2e6;">Available Copies</th>
+          <th class="pb-3 fw-semibold" style="border: 1px solid #dee2e6;">Cover Image</th>
           <th class="pb-3 fw-semibold" style="min-width: 250px; border: 1px solid #dee2e6;">Description</th>
+          
           <th class="pb-3 fw-semibold" style="border: 1px solid #dee2e6;">Status</th>
           <th class="pb-3 fw-semibold text-center" style="border: 1px solid #dee2e6;">Actions</th>
         </tr>
@@ -114,6 +116,28 @@
             <span class="view-mode">{{ book.available_copies }}</span>
             <input type="number" class="form-control form-control-sm edit-mode d-none data-available_copies" value="{{ book.available_copies }}" required />
           </td>
+   <td style="border: 1px solid #dee2e6; max-width: 150px; vertical-align: middle;">
+  <!-- VIEW MODE: Jab normal view ho (Isme view-mode class lagayi hai) -->
+  <div class="view-mode" style="max-height: 50px; overflow: hidden; display: flex; align-items: center;">
+    {% if book.cover_image %}
+      <a href="{{ book.cover_image }}" 
+         target="_blank" 
+         title="{{ book.cover_image }}" 
+         style="display: inline-block; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-decoration: none; color: #0d6efd;">
+         {{ book.cover_image }}
+      </a>
+    {% else %}
+      <span class="text-muted" style="font-style: italic; font-size: 0.9rem;">No Image URL</span>
+    {% endif %}
+  </div>
+
+  <!-- EDIT MODE: Jab Edit button dabe (Isme edit-mode aur d-none lagaya hai) -->
+  <input type="url" 
+         class="form-control form-control-sm edit-mode d-none data-cover_image" 
+         value="{{ book.cover_image or '' }}" 
+         style="height: 35px;" 
+         placeholder="e.g. https://example.com/image.jpg" />
+</td>
           <td style="border: 1px solid #dee2e6;">
             <span class="view-mode text-wrap text-muted small d-block" style="max-width: 280px">{{ book.description or '-' }}</span>
             <textarea class="form-control form-control-sm edit-mode d-none data-description">{{ book.description or '' }}</textarea>
@@ -231,6 +255,10 @@
         <div class="mb-3">
           <label for="available_copies" class="form-label fw-semibold text-secondary">Available Copies</label>
           <input type="number" class="form-control" id="available_copies" required placeholder="e.g. 10" />
+        </div>
+        <div class="mb-3">
+          <label for="cover_image" class="form-label fw-semibold text-secondary">Cover Image</label>
+          <input type="url" class="form-control" id="cover_image" required placeholder="e.g. https://example.com/image.jpg" />
         </div>
         <div class="mb-3">
           <label for="description" class="form-label fw-semibold text-secondary">Description</label>
@@ -352,6 +380,7 @@
       shelf_no: row.querySelector(".data-shelf_no").value.trim(),
       total_copies: parseInt(row.querySelector(".data-total_copies").value) || 0,
       available_copies: parseInt(row.querySelector(".data-available_copies").value) || 0,
+      cover_image: row.querySelector(".data-cover_image").value.trim(),
       description: row.querySelector(".data-description").value.trim(),
       status: row.querySelector(".data-status").value,
     };
@@ -366,7 +395,7 @@
       const result = await response.json();
 
       if (response.ok) {
-        showToast("Book entry updated cleanly in real-time!", true);
+        showToast("Book updated successfully!", true);
         setTimeout(() => window.location.reload(), 1200);
       } else {
         let errLog = result.detail || "Server error verified during put mutation processing.";
@@ -396,6 +425,7 @@
       shelf_no: document.getElementById("shelf_no").value.trim(),
       total_copies: parseInt(document.getElementById("total_copies").value) || 0,
       available_copies: parseInt(document.getElementById("available_copies").value) || 0,
+      cover_image: document.getElementById("cover_image").value.trim(),
       description: document.getElementById("description").value.trim(),
       status: document.getElementById("status").value,
     };

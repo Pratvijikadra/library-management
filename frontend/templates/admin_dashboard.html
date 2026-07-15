@@ -17,6 +17,26 @@
 
 <!-- 📊 KEY METRICS COUNTER GRID SECTION -->
 <div class="row g-4 mb-4">
+
+
+  <!-- Metric Card: Total Members -->
+  <div class="col-xl-3 col-md-6">
+    <div class="custom-card p-4 shadow-sm border-start border-dark border-4 rounded-3 bg-white h-100">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <h6 class="text-muted text-uppercase small fw-bold mb-1">Total Members</h6>
+          <!-- Backend should pass total_books count dynamically -->
+          <h3 class="fw-bold text-dark m-0">{{ total_members if total_members is defined else '0' }}</h3>
+        </div>
+        <div class="bg-primary-subtle text-dark rounded-circle p-3 fs-3 d-flex align-items-center justify-content-center" style="width: 55px; height: 55px;">
+          <i class="fa-solid fa-user"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
   <!-- Metric Card: Total Books -->
   <div class="col-xl-3 col-md-6">
     <div class="custom-card p-4 shadow-sm border-start border-dark border-4 rounded-3 bg-white h-100">

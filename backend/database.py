@@ -27,3 +27,12 @@ books_collection = db["books"]
 categories_collection = db["categories"]
 languages_collection = db["languages"]
 otps_collection = db["otp"]
+issued_books_collection = db["issued_books"]
+
+wishlist_collection = db["wishlist"]
+
+reservations_collection = db["reservations"]
+
+notifications_collection = db["notifications"]
+
+reviews_collection = db["reviews"]

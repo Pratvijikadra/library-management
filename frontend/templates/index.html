@@ -1,6 +1,195 @@
-<!-- {% extends 'base.html' %} {% block title %}Library Management System {% endblock %} {% block content %} -->
+{% extends "base.html" %} {% block title %}Dashboard{% endblock %} {% block nav_dashboard %}active{% endblock %} {% block page_heading %} Dashboard {% endblock %} {% block content %}
 
+<div class="container-fluid">
+  <!-- Welcome -->
+  <div class="custom-card p-4 mb-4">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <h3 class="fw-bold mb-2">
+          Welcome back,
+          <span style="color: #4b5694"> {{ user.name }} </span>
+          👋
+        </h3>
 
-    <h1 class="display-5 fw-bold text-dark">Welcome back, {{ user.name }}!</h1>
- 
-<!-- {% endblock %} -->
+        <p class="text-muted mb-0">Manage your books and explore the library collection.</p>
+      </div>
+
+      <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        <h5 id="todayDate"></h5>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistics -->
+
+  <div class="row g-4 mb-4">
+    <div class="col-lg-3 col-sm-6">
+      <div class="custom-card p-4 h-100">
+        <div class="d-flex justify-content-between">
+          <div>
+            <small class="text-muted"> Total Books </small>
+
+            <h2 class="fw-bold mt-2">{{ stats.total_books }}</h2>
+          </div>
+
+          <div class="icon-box">
+            <i class="fas fa-book"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-sm-6">
+      <div class="custom-card p-4 h-100">
+        <div class="d-flex justify-content-between">
+          <div>
+            <small class="text-muted"> Available </small>
+
+            <h2 class="fw-bold mt-2 text-success">{{ stats.available_books }}</h2>
+          </div>
+
+          <div class="icon-box">
+            <i class="fas fa-check"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-sm-6">
+      <div class="custom-card p-4 h-100">
+        <div class="d-flex justify-content-between">
+          <div>
+            <small class="text-muted"> Unavailable </small>
+
+            <h2 class="fw-bold mt-2 text-danger">{{ stats.unavailable_books }}</h2>
+          </div>
+
+          <div class="icon-box">
+            <i class="fas fa-times"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-lg-3 col-sm-6">
+      <div class="custom-card p-4 h-100">
+        <div class="d-flex justify-content-between">
+          <div>
+            <small class="text-muted"> Top Rated </small>
+
+            <h2 class="fw-bold mt-2 text-warning">{{ stats.top_rated_books }}</h2>
+          </div>
+
+          <div class="icon-box">
+            <i class="fas fa-star"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Latest Books -->
+
+  <div class="custom-card p-4 mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h4 class="fw-bold mb-0">Recently Added Books</h4>
+    </div>
+
+    <div class="row g-4">
+      {% for book in latest_books %}
+
+      <div class="col-xl-3 col-lg-4 col-md-6">
+        <div class="card shadow-sm border-0 h-100">
+          <img src="{{ book.cover_image if book.cover_image else 'https://placehold.co/600x400?text=No+Image' }}" class="card-img-top" style="height: 220px; width: 100%;
+    object-fit: contain;
+    object-position: center;
+    background-color: white" />
+
+          <div class="card-body">
+            <h5>Book Name : {{ book.title }}</h5>
+
+            <p class="text-muted mb-1">Author : {{ book.author_name }}</p>
+            <p class="text-muted mb-1">Publisher : {{ book.publisher_name }}</p>
+
+            <span class="badge bg-primary-subtle text-dark"> {{ book.category_name }} </span>
+          </div>
+
+          <div class="card-footer bg-white border-0">
+            <div class="d-flex justify-content-between">
+              <small> {{ book.status }} </small>
+
+              <strong> {{ book.available_copies }}/{{ book.total_copies }} </strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {% else %}
+
+      <div class="col-12">
+        <div class="alert alert-light border">No books available.</div>
+      </div>
+
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Top Rated -->
+
+  <div class="custom-card p-4">
+    <h4 class="fw-bold mb-4">Top Rated Books</h4>
+
+    <div class="table-responsive">
+      <table class="table align-middle">
+        <thead>
+          <tr>
+            <th>Book</th>
+
+            <th>Author</th>
+
+            <th>Category</th>
+
+            <th>Rating</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for book in recommended_books %}
+
+          <tr>
+            <td>{{ book.title }}</td>
+
+            <td>{{ book.author_name }}</td>
+
+            <td>{{ book.category_name }}</td>
+
+            <td>⭐ {{ book.average_rating or 0 }}</td>
+          </tr>
+
+          {% else %}
+
+          <tr>
+            <td colspan="4">No rated books available.</td>
+          </tr>
+
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %} {% block extra_js %}
+
+<script>
+  const options = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  };
+
+  document.getElementById("todayDate").innerHTML = new Date().toLocaleDateString("en-US", options);
+</script>
+
+{% endblock %}

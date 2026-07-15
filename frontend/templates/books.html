@@ -1,0 +1,586 @@
+{% extends "base.html" %}
+
+{% block title %}Browse Books{% endblock %}
+
+{% block nav_books %}active{% endblock %}
+
+{% block page_heading %}
+Browse Books
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <!-- ========================= -->
+    <!-- Page Header -->
+    <!-- ========================= -->
+
+    <div class="custom-card p-4 mb-4">
+
+        <div class="row align-items-center">
+
+            <div class="col-md-8">
+
+                <h3 class="fw-bold mb-1">
+                    Browse Library Books
+                </h3>
+
+                <p class="text-muted mb-0">
+                    Explore all available books in the library.
+                </p>
+
+            </div>
+
+            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+
+                <span class="badge fs-6 px-3 py-2" style="background-color: var(--bg-primary);">
+                    Total Books :
+                    {{ total_books }}
+                </span>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- Search & Filters -->
+    <!-- ========================= -->
+
+    <div class="custom-card p-4 mb-4">
+
+        <form method="GET" action="/books">
+
+            <div class="row g-3">
+
+                <!-- Search -->
+
+                <div class="col-lg-4">
+
+                    <label class="form-label fw-semibold">
+
+                        Search
+
+                    </label>
+
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="search"
+                        value="{{ search }}"
+                        placeholder="Title, Author or ISBN">
+
+                </div>
+
+                <!-- Category -->
+
+                <div class="col-lg-2">
+
+                    <label class="form-label fw-semibold">
+
+                        Category
+
+                    </label>
+
+                    <select
+                        class="form-select"
+                        name="category">
+
+                        <option value="">
+                            All Categories
+                        </option>
+
+                        {% for category in categories %}
+
+                        <option
+                            value="{{ category.name }}"
+                            {% if selected_category == category.name %}
+                            selected
+                            {% endif %}
+                        >
+
+                            {{ category.name }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <!-- Language -->
+
+                <div class="col-lg-2">
+
+                    <label class="form-label fw-semibold">
+
+                        Language
+
+                    </label>
+
+                    <select
+                        class="form-select"
+                        name="language">
+
+                        <option value="">
+                            All Languages
+                        </option>
+
+                        {% for language in languages %}
+
+                        <option
+                            value="{{ language.name }}"
+                            {% if selected_language==language.name %}
+                            selected
+                            {% endif %}
+                        >
+
+                            {{ language.name }}
+
+                        </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <!-- Sort -->
+
+                <div class="col-lg-2">
+
+                    <label class="form-label fw-semibold">
+
+                        Sort
+
+                    </label>
+
+                    <select
+                        class="form-select"
+                        name="sort">
+
+                        <option
+                            value="latest"
+                            {% if selected_sort=="latest" %}
+                            selected
+                            {% endif %}
+                        >
+
+                            Latest
+
+                        </option>
+
+                        <option
+                            value="oldest"
+                            {% if selected_sort=="oldest" %}
+                            selected
+                            {% endif %}
+                        >
+
+                            Oldest
+
+                        </option>
+
+                        <option
+                            value="title"
+                            {% if selected_sort=="title" %}
+                            selected
+                            {% endif %}
+                        >
+
+                            A - Z
+
+                        </option>
+
+                        <option
+                            value="title_desc"
+                            {% if selected_sort=="title_desc" %}
+                            selected
+                            {% endif %}
+                        >
+
+                            Z - A
+
+                        </option>
+
+                        <option
+                            value="rating"
+                            {% if selected_sort=="rating" %}
+                            selected
+                            {% endif %}
+                        >
+
+                            Highest Rating
+
+                        </option>
+
+                    </select>
+
+                </div>
+
+                <!-- Buttons -->
+
+                <div class="col-lg-2 d-flex align-items-end">
+
+                    <button
+                        class="btn btn-primary-custom w-100">
+
+                        <i class="fa-solid fa-magnifying-glass me-2"></i>
+
+                        Search
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+    <!-- ========================= -->
+    <!-- Books Grid -->
+    <!-- ========================= -->
+
+    <div class="row g-4">
+
+        {% for book in books %}
+
+        <div class="col-xl-4 col-xxl-3 col-md-6">
+
+            <div class="card border-0 shadow-sm h-100">
+
+                <!-- Cover -->
+
+                <img
+                    src="{% if book.cover_image %}{{ book.cover_image }}{% else %}https://placehold.co/600x800?text=Book{% endif %}"
+                    class="card-img-top"
+                    style="height: 220px; width: 100%;
+    object-fit: contain;
+    object-position: center;
+    background-color: white;">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold">
+
+                        {{ book.title }}
+
+                    </h5>
+
+                    <p class="text-muted mb-3">
+
+                        {{ book.author_name }}
+
+                    </p>
+
+                    <!-- Remaining card code will continue in Part 2 -->
+                    <!-- Rating -->
+
+                    <div class="mb-3">
+
+                        {% set rating = book.average_rating or 0 %}
+
+                        <span class="text-warning">
+
+                            {% for i in range(5) %}
+
+                                {% if i < rating|int %}
+
+                                    <i class="fa-solid fa-star"></i>
+
+                                {% else %}
+
+                                    <i class="fa-regular fa-star"></i>
+
+                                {% endif %}
+
+                            {% endfor %}
+
+                        </span>
+
+                        <small class="text-muted">
+
+                            ({{ "%.1f"|format(rating) }})
+
+                        </small>
+
+                    </div>
+
+                    <!-- Category -->
+
+                    <div class="mb-2">
+
+                        <span class="badge bg-primary">
+
+                            {{ book.category_name }}
+
+                        </span>
+
+                    </div>
+
+                    <!-- Language -->
+
+                    <div class="mb-3">
+
+                        <span class="badge bg-secondary">
+
+                            {{ book.language }}
+
+                        </span>
+
+                    </div>
+
+                    <!-- Book Details -->
+
+                    <div class="small text-muted mb-2">
+
+                        <i class="fa-solid fa-building me-2"></i>
+
+                        {{ book.publisher_name }}
+
+                    </div>
+
+                    <div class="small text-muted mb-2">
+
+                        <i class="fa-solid fa-book-open me-2"></i>
+
+                        {{ book.edition }}
+
+                    </div>
+
+                    <div class="small text-muted mb-2">
+
+                        <i class="fa-solid fa-file-lines me-2"></i>
+
+                        {{ book.pages }} Pages
+
+                    </div>
+
+                    <!-- Copies -->
+
+                    <div class="d-flex justify-content-between mt-4">
+
+                        <span>
+
+                            {{ book.status }} 
+
+                        </span>
+
+                        <strong>
+
+                            {{ book.available_copies }}/{{ book.total_copies }}
+
+                        </strong>
+
+                    </div>
+
+                    
+
+                </div>
+
+                <!-- Footer -->
+
+                <div class="card-footer bg-white border-0">
+
+                    <div class="d-grid">
+
+                        <a
+                            href="/books/{{ book._id }}"
+                            class="btn btn-primary-custom">
+
+                            <i class="fa-solid fa-eye me-2"></i>
+
+                            View Details
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% else %}
+
+        <!-- Empty State -->
+
+        <div class="col-12">
+
+            <div class="custom-card p-5 text-center">
+
+                <i
+                    class="fa-solid fa-book-open-reader fa-4x text-secondary mb-3">
+                </i>
+
+                <h3>
+
+                    No Books Found
+
+                </h3>
+
+                <p class="text-muted">
+
+                    There are no books matching your search criteria.
+
+                </p>
+
+            </div>
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    <!-- Pagination will continue in Part 3 -->
+
+    <!-- ========================= -->
+    <!-- Pagination -->
+    <!-- ========================= -->
+
+    {% if total_pages > 1 %}
+
+    <nav class="mt-5">
+
+        <ul class="pagination justify-content-center">
+
+            <!-- Previous -->
+
+            <li class="page-item {% if current_page == 1 %}disabled{% endif %}">
+
+                <a class="page-link"
+                   href="?page={{ current_page-1 }}&search={{ search }}&category={{ selected_category }}&language={{ selected_language }}&sort={{ selected_sort }}">
+
+                    Previous
+
+                </a>
+
+            </li>
+
+            <!-- Page Numbers -->
+
+            {% for page in range(1, total_pages + 1) %}
+
+            <li class="page-item {% if page == current_page %}active{% endif %}">
+
+                <a class="page-link"
+                   href="?page={{ page }}&search={{ search }}&category={{ selected_category }}&language={{ selected_language }}&sort={{ selected_sort }}">
+
+                    {{ page }}
+
+                </a>
+
+            </li>
+
+            {% endfor %}
+
+            <!-- Next -->
+
+            <li class="page-item {% if current_page == total_pages %}disabled{% endif %}">
+
+                <a class="page-link"
+                   href="?page={{ current_page+1 }}&search={{ search }}&category={{ selected_category }}&language={{ selected_language }}&sort={{ selected_sort }}">
+
+                    Next
+
+                </a>
+
+            </li>
+
+        </ul>
+
+    </nav>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+.card{
+
+    overflow: hidden;
+    border-radius:12px;
+
+}
+
+.card:hover{
+
+    
+
+    box-shadow:0 10px 30px rgba(0,0,0,.12);
+
+}
+
+.card-img-top{
+
+    transition:.4s;
+    
+
+}
+
+.card:hover .card-img-top{
+
+    transform:scale(1.04);
+    
+
+}
+
+.badge{
+
+    font-size:.78rem;
+
+}
+
+.pagination .page-link{
+
+    color:#4B5694;
+
+}
+
+.pagination .active .page-link{
+
+    background:#4B5694;
+
+    border-color:#4B5694;
+    color: white;
+
+}
+
+</style>
+
+{% endblock %}
+
+
+
+{% block extra_js %}
+
+<script>
+
+const selects=document.querySelectorAll("select");
+
+selects.forEach(select=>{
+
+    select.addEventListener("change",()=>{
+
+        select.form.submit();
+
+    });
+
+});
+
+</script>
+
+{% endblock %}

@@ -24,14 +24,26 @@ class Books(BaseModel):
     shelf_no: str = Field(..., description="Shelf number of the book")
     total_copies: int = Field(..., description="Total copies of the book")
     available_copies: int = Field(..., description="Available copies of the book")
-    # cover_image: HttpUrl = Field(
-    #     ..., 
-    #     description="Cover image URL of the book (must be a valid HTTP/HTTPS link)"
-    # )
+    cover_image: HttpUrl = Field(
+        ..., 
+        description="Cover image URL of the book (must be a valid HTTP/HTTPS link)"
+    )
     description: Optional[str] = Field(default=None, description="Description of the book")
     status: str = Field(..., description="Status of the book")
     created_at: datetime = Field(default_factory=datetime.now, description="Created at time of the book")
     updated_at: datetime = Field(default_factory=datetime.now, description="Updated at time of the book")
+
+    average_rating: Optional[float] = Field(
+        default=None,
+        ge=0.0,
+        le=5.0,
+        description="Average rating of the book (0.0 to 5.0)"
+    )
+    reviews_count: Optional[int] = Field(
+        default=0,
+        ge=0,
+        description="Number of reviews for the book"
+    )
 
     model_config = ConfigDict(extra="ignore")
 
