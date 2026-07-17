@@ -17,38 +17,26 @@
       <!-- Left -->
       <!-- ========================= -->
 
-      <div class="col-lg-4">
-        <img src="{% if book.cover_image %}{{ book.cover_image }}{% else %}https://placehold.co/600x900?text=Book{% endif %}" class="img-fluid rounded shadow" style="width: 100%; height: 600px; object-fit: cover" />
-      </div>
+    
+
+      <div class="col-lg-3">
+  <div class="rounded shadow overflow-hidden" style="width: 100%; height: 600px; background-color: #f8f9fa; display: flex; align-items: center; justify-content: center;">
+    <img src="{% if book.cover_image %}{{ book.cover_image }}{% else %}https://placehold.co/600x900?text=Book{% endif %}" 
+         class="img-fluid" 
+         style="max-width: 100%; max-height: 100%; object-fit: contain;" />
+  </div>
+</div>
 
       <!-- ========================= -->
       <!-- Right -->
       <!-- ========================= -->
 
-      <div class="col-lg-8">
-        <h2 class="fw-bold mb-2">{{ book.title }}</h2>
+      <div class="col-lg-9">
+        <h2 class="fw-bold mb-2">Book Name : {{ book.title }}</h2>
 
         <!-- Rating -->
 
-        <div class="mb-3">
-          {% set rating = book.average_rating or 0 %}
-
-          <span class="text-warning fs-5">
-            {% for i in range(5) %} {% if i < rating|int %}
-
-            <i class="fa-solid fa-star"></i>
-
-            {% else %}
-
-            <i class="fa-regular fa-star"></i>
-
-            {% endif %} {% endfor %}
-          </span>
-
-          <span class="fw-semibold"> {{ "%.1f"|format(rating) }} </span>
-
-          <small class="text-muted"> ({{ book.reviews_count }} Reviews) </small>
-        </div>
+      
 
         <hr />
 
@@ -69,7 +57,7 @@
             <strong> Category </strong>
 
             <p>
-              <span class="badge bg-primary"> {{ book.category_name }} </span>
+              <span class="badge bg-primary-subtle text-dark"> {{ book.category_name }} </span>
             </p>
           </div>
 
@@ -219,15 +207,20 @@
 
       <div class="col-xl-3 col-lg-4 col-md-6">
         <div class="card border-0 shadow-sm h-100">
-          <img src="{% if item.cover_image %}{{ item.cover_image }}{% else %}https://placehold.co/600x800?text=Book{% endif %}" class="card-img-top" style="height: 260px; object-fit: cover" />
+         <div style="height: 260px; background-color: #f8f9fa; display: flex; align-items: center; justify-content: center; overflow: hidden;" class="card-img-top">
+      <img src="{% if item.cover_image %}{{ item.cover_image }}{% else %}https://placehold.co/600x800?text=Book{% endif %}" 
+           style="max-width: 100%; max-height: 100%; object-fit: contain;" 
+           alt="{{ item.title }}" />
+    </div>
 
           <div class="card-body">
-            <h6 class="fw-bold">{{ item.title }}</h6>
+            <h6 class="fw-bold">Book Name : {{ item.title }}</h6>
 
-            <small class="text-muted"> {{ item.author_name }} </small>
+            <small class="text-muted"> Author : {{ item.author_name }} </small><br>
+            <small class="text-muted"> Publisher : {{ item.publisher_name }}</small>
 
             <div class="mt-3">
-              <span class="badge bg-primary"> {{ item.category_name }} </span>
+              <span class="badge bg-primary-subtle text-dark"> {{ item.category_name }} </span> <span class="badge bg-secondary-subtle text-dark">{{ item.language }}</span>
             </div>
           </div>
 
@@ -300,6 +293,24 @@
   .custom-card {
     animation: fadeIn 0.35s ease;
   }
+
+.btn-primary-custom{
+      color: var(--bg-primary);
+    background-color: white;
+    border: 1px solid var(--bg-primary);
+    margin-top: 5px;
+    
+}
+
+.btn-primary-custom:hover{
+  
+  
+
+    color: white;
+    background-color: var(--bg-primary);
+}
+
+
 
   @keyframes fadeIn {
     from {

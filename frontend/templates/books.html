@@ -267,84 +267,50 @@ Browse Books
                 <div class="card-body">
 
                     <h5 class="fw-bold">
+                        Book Name : 
 
                         {{ book.title }}
 
                     </h5>
 
-                    <p class="text-muted mb-3">
+                    <p class="text-muted mb-0">
 
-                        {{ book.author_name }}
+                       Author : {{ book.author_name }}
+
+                    </p>
+
+                      <p class="text-muted mb-3">
+
+                       Publisher : {{ book.publisher_name }}
 
                     </p>
 
                     <!-- Remaining card code will continue in Part 2 -->
-                    <!-- Rating -->
 
-                    <div class="mb-3">
-
-                        {% set rating = book.average_rating or 0 %}
-
-                        <span class="text-warning">
-
-                            {% for i in range(5) %}
-
-                                {% if i < rating|int %}
-
-                                    <i class="fa-solid fa-star"></i>
-
-                                {% else %}
-
-                                    <i class="fa-regular fa-star"></i>
-
-                                {% endif %}
-
-                            {% endfor %}
-
-                        </span>
-
-                        <small class="text-muted">
-
-                            ({{ "%.1f"|format(rating) }})
-
-                        </small>
-
-                    </div>
 
                     <!-- Category -->
 
                     <div class="mb-2">
 
-                        <span class="badge bg-primary">
+                        <span class="badge bg-primary-subtle text-dark">
 
                             {{ book.category_name }}
 
                         </span>
 
-                    </div>
-
-                    <!-- Language -->
-
-                    <div class="mb-3">
-
-                        <span class="badge bg-secondary">
+                         <span class="badge bg-secondary">
 
                             {{ book.language }}
 
                         </span>
 
+
                     </div>
+
 
                     <!-- Book Details -->
 
-                    <div class="small text-muted mb-2">
-
-                        <i class="fa-solid fa-building me-2"></i>
-
-                        {{ book.publisher_name }}
-
-                    </div>
-
+                   
                     <div class="small text-muted mb-2">
 
                         <i class="fa-solid fa-book-open me-2"></i>

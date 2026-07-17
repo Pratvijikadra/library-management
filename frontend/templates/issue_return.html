@@ -1,0 +1,100 @@
+{% extends "admin_base.html" %} 
+{% block title %}Issue-Return - Library System{% endblock %} 
+{% block nav_issue %}active{% endblock %} 
+{% block page_heading %}Issue-Return Management{% endblock %} 
+
+{% block content %}
+
+<div class="custom-card p-4 shadow-sm">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h5 class="m-0 fw-bold">Issue & Return Records</h5>
+  </div>
+
+  <div class="w-100 table-responsive" style="overflow-x: auto; display: block">
+    <table class="table table-hover align-middle mb-0 text-nowrap" style="border-collapse: separate;">
+      <thead>
+        <tr class="text-secondary opacity-70 border-bottom-2">
+          <th class="pb-3 fw-semibold text-center" style="width: 60px; border: 1px solid #dee2e6;">No.</th>
+          <th class="pb-3 fw-semibold" style="min-width: 180px; border: 1px solid #dee2e6;">Member Details</th>
+          <th class="pb-3 fw-semibold" style="min-width: 200px; border: 1px solid #dee2e6;">Book Title</th>
+          <th class="pb-3 fw-semibold" style="border: 1px solid #dee2e6;">Issue Date</th>
+          <th class="pb-3 fw-semibold" style="border: 1px solid #dee2e6;">Due Date</th>
+          <th class="pb-3 fw-semibold" style="border: 1px solid #dee2e6;">Return Date</th>
+          <th class="pb-3 fw-semibold text-center" style="border: 1px solid #dee2e6;">Status</th>
+          <th class="pb-3 fw-semibold text-center" style="border: 1px solid #dee2e6;">Fine Amount</th>
+          <th class="pb-3 fw-semibold text-center" style="border: 1px solid #dee2e6;">Fine Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for record in records %}
+        <tr id="row-{{ record.id }}">
+          <!-- No. -->
+          <td class="text-center fw-medium text-secondary index-cell" style="border: 1px solid #dee2e6;">{{ loop.index }}</td>
+
+          <!-- Member Details -->
+          <td style="border: 1px solid #dee2e6;">
+            <div class="fw-semibold text-dark">{{ record.user_name }}</div>
+            <small class="text-muted d-block" style="font-size: 0.8rem;">{{ record.user_email }}</small>
+          </td>
+
+          <!-- Book Title -->
+          <td style="border: 1px solid #dee2e6;">
+            <span class="text-wrap d-block fw-medium" style="max-width: 250px;">{{ record.book_title }}</span>
+          </td>
+
+          <!-- Issue Date -->
+          <td style="border: 1px solid #dee2e6;">
+            <span class="text-secondary">{{ record.issue_date }}</span>
+          </td>
+
+          <!-- Due Date -->
+          <td style="border: 1px solid #dee2e6;">
+            <span class="text-secondary fw-medium">{{ record.due_date }}</span>
+          </td>
+
+          <!-- Return Date -->
+          <td style="border: 1px solid #dee2e6;">
+            <span class="text-secondary">{{ record.return_date }}</span>
+          </td>
+
+          <!-- Status Badge -->
+          <td class="text-center" style="border: 1px solid #dee2e6;">
+            {% if record.status == 'Returned' %}
+              <span class="badge bg-success-subtle text-success px-2 py-1 rounded">Returned</span>
+            {% else %}
+              <span class="badge bg-primary-subtle text-primary px-2 py-1 rounded">Issued</span>
+            {% endif %}
+          </td>
+
+          <!-- Fine Amount -->
+          <td class="text-center fw-bold text-dark" style="border: 1px solid #dee2e6;">
+            ₹{{ record.fine_amount }}
+          </td>
+
+          <!-- Fine Paid True/False Badge -->
+          <td class="text-center" style="border: 1px solid #dee2e6;">
+            {% if record.fine_amount > 0 %}
+              {% if record.fine_paid %}
+                <span class="badge bg-success text-white px-2 py-1 rounded-pill"><i class="fa-solid fa-circle-check me-1"></i>Paid</span>
+              {% else %}
+                <span class="badge bg-danger text-white px-2 py-1 rounded-pill"><i class="fa-solid fa-circle-exclamation me-1"></i>Unpaid</span>
+              {% endif %}
+            {% else %}
+              <span class="text-muted" style="font-size: 0.9rem;">—</span>
+            {% endif %}
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="9" class="text-center text-muted py-5">
+            <i class="fa-regular fa-folder-open fs-2 d-block mb-2 text-secondary opacity-50"></i>
+            No Issue/Return Records Found.
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+{% endblock %}

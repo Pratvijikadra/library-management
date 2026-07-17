@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from backend.database import users_collection
-from backend.routes import books, search, admin, auth, dashboard, library
+from backend.routes import books, search, admin, auth, dashboard, library, issue_return
 from fastapi.responses import HTMLResponse
 from fastapi import Request, HTTPException, Form, Response, responses, Depends
 from fastapi.staticfiles import StaticFiles
@@ -23,6 +23,8 @@ app.include_router(admin.router)
 app.include_router(auth.router)
 app.include_router(dashboard.router)
 app.include_router(library.router)
+app.include_router(issue_return.router)
+
 
 
 

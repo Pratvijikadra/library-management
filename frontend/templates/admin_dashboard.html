@@ -44,7 +44,7 @@
         <div>
           <h6 class="text-muted text-uppercase small fw-bold mb-1">Total Books</h6>
           <!-- Backend should pass total_books count dynamically -->
-          <h3 class="fw-bold text-dark m-0">{{ total_books if total_books is defined else '1,248' }}</h3>
+          <h3 class="fw-bold text-dark m-0">{{ total_books if total_books is defined else '0' }}</h3>
         </div>
         <div class="bg-primary-subtle text-dark rounded-circle p-3 fs-3 d-flex align-items-center justify-content-center" style="width: 55px; height: 55px;">
           <i class="fa-solid fa-book"></i>
@@ -60,7 +60,7 @@
         <div>
           <h6 class="text-muted text-uppercase small fw-bold mb-1">Active Categories</h6>
           <!-- Backend should pass total_categories count dynamically -->
-          <h3 class="fw-bold text-dark m-0">{{ total_categories if total_categories is defined else '42' }}</h3>
+          <h3 class="fw-bold text-dark m-0">{{ total_categories if total_categories is defined else '0' }}</h3>
         </div>
         <div class="bg-primary-subtle text-dark rounded-circle p-3 fs-3 d-flex align-items-center justify-content-center" style="width: 55px; height: 55px;">
           <i class="fa-solid fa-tags"></i>
@@ -79,7 +79,7 @@
           <h3 class="fw-bold text-dark m-0">{{ issued_books if issued_books is defined else '0' }}</h3>
         </div>
         <div class="bg-primary-subtle text-dark rounded-circle p-3 fs-3 d-flex align-items-center justify-content-center" style="width: 55px; height: 55px;">
-          <i class="fa-solid fa-tags"></i>
+          <i class="fa-solid fa-book-bookmark"></i>
         </div>
       </div>
     </div>
@@ -97,7 +97,7 @@
           <h3 class="fw-bold text-dark m-0">{{ overdue_books if overdue_books is defined else '0' }}</h3>
         </div>
         <div class="bg-primary-subtle text-dark rounded-circle p-3 fs-3 d-flex align-items-center justify-content-center" style="width: 55px; height: 55px;">
-          <i class="fa-solid fa-tags"></i>
+            <i class="fa-solid fa-clock me-1"></i>
         </div>
       </div>
     </div>

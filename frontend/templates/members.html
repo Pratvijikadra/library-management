@@ -1,0 +1,195 @@
+{% extends "admin_base.html" %} 
+{% block title %}Manage Members - Library System{% endblock %} 
+{% block nav_members %}active{% endblock %} 
+{% block page_heading %}Member Management{% endblock %} 
+
+{% block content %}
+
+
+<!-- 📊 METRICS SECTION (Total Categories Indicator) -->
+<div class="row mb-4">
+  <div class="col-md-4">
+    <div class="custom-card p-4 shadow-sm border-start border-dark border-4 rounded-3 bg-white">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <h6 class="text-muted text-uppercase small fw-bold mb-1">Total Members</h6>
+          <h3 class="fw-bold text-dark m-0">{{ users|length }}</h3>
+        </div>
+        <div class="bg-primary-subtle text-derk rounded-circle p-3 fs-4">
+           <i class="fa-solid fa-book"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="custom-card p-4 shadow-sm">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h5 class="m-0 fw-bold">Member Details</h5>
+    
+  </div>
+
+  <div class="w-100 table-responsive" style="overflow-x: auto; display: block">
+    <table class="table table-hover align-middle mb-0 text-nowrap" style="border-collapse: separate; ">
+      <thead>
+        <tr class="text-secondary opacity-70 border-bottom-2">
+          <th class="pb-3 fw-semibold text-center" style="width: 80px; border: 1px solid #dee2e6;">No.</th>
+          <th class="pb-3 fw-semibold" style="min-width: 200px; border: 1px solid #dee2e6;">Name</th>
+          <th class="pb-3 fw-semibold" style="border: 1px solid #dee2e6;">Email</th>
+          <th class="pb-3 fw-semibold" style="border: 1px solid #dee2e6;">Member Since</th>
+          <th class="pb-3 fw-semibold text-center" style="border: 1px solid #dee2e6;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr id="row-{{ user.id }}">
+          <td class="text-center fw-medium text-secondary index-cell" style="border: 1px solid #dee2e6;">{{ loop.index }}</td>
+
+          <td style="border: 1px solid #dee2e6;">
+            <span class="view-mode fw-semibold text-dark text-wrap d-block" style="max-width: 220px">{{ user.name }}</span>
+            <input type="text" class="form-control form-control-sm edit-mode d-none data-name" value="{{ user.name }}" required />
+          </td>
+          <td style="border: 1px solid #dee2e6;">
+            <span class="fw-muted data-email">{{ user.email }}</span>
+          </td>
+          <td style="border: 1px solid #dee2e6;">
+            <span class="view-mode">{{ user.created_at }}</span>
+            <input type="text" class="form-control form-control-sm edit-mode d-none data-created_at" value="{{ user.created_at }}" required />
+          </td>
+         
+          
+        
+  
+          <td class="text-center" style="border: 1px solid #dee2e6;">
+            <div class="view-actions d-flex align-items-center justify-content-center gap-2">
+              
+              <button type="button" class="btn btn-sm btn-link text-danger p-0 ms-1 text-decoration-none" title="Delete Member" onclick="triggerDeleteModal('{{ user._id }}', '{{ user.name|safe }}')">
+                Delete Member
+              </button>
+            </div>
+            <div class="edit-actions d-none align-items-center justify-content-center gap-2">
+              <button type="button" class="btn btn-sm btn-success px-2 py-1 text-xs fw-medium rounded shadow-sm" onclick="saveRowInline('{{ user._id }}')">Save</button>
+              <button type="button" class="btn btn-sm btn-secondary px-2 py-1 text-xs fw-medium rounded shadow-sm" onclick="toggleRowEdit('{{ user._id }}', false)">Cancel</button>
+            </div>
+          </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td colspan="16" class="text-center text-muted py-5"><i class="fa-regular fa-folder-open fs-2 d-block mb-2 text-secondary opacity-50"></i>No Member Registered Yet.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<!-- 🗑️ MODERN DELETE CONFIRMATION MODAL -->
+<div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" style="max-width: 400px">
+    <div class="modal-content rounded-3 border-0 shadow">
+      <div class="modal-body text-center p-4">
+        <div class="text-danger mb-3">
+          <i class="fa-solid fa-triangle-exclamation display-4"></i>
+        </div>
+        <h5 class="fw-bold text-dark mb-2">Delete Member?</h5>
+        <p class="text-muted small mb-4">Are you sure you want to permanently delete <strong id="deleteTargetName" class="text-dark">{{ users.name }}</strong>?</p>
+        <div class="d-flex justify-content-center gap-2">
+          <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-danger px-4" id="confirmDeleteBtn">Delete</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 🍞 UNIVERSAL DYNAMIC TOAST SYSTEM -->
+<div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1100">
+  <div id="liveToast" class="toast align-items-center text-white border-0 shadow" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="d-flex">
+      <div class="toast-body d-flex align-items-center gap-2">
+        <i id="toastIcon" class="fa-solid"></i>
+        <span id="toastMessage">Processing...</span>
+      </div>
+      <button type="button" class="btn-close btn-close-white m-auto me-2" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+  </div>
+</div>
+{% endblock %} 
+
+{% block extra_js %}
+<script>
+  // FIX: Declare activeMemberId globally so it can be updated and read across functions
+  let activeMemberId = null; 
+  let deleteModalInstance = null;
+
+  document.addEventListener("DOMContentLoaded", function () {
+    deleteModalInstance = new bootstrap.Modal(document.getElementById("deleteConfirmModal"));
+  });
+
+  function showToast(message, isSuccess = true) {
+    const toastElement = document.getElementById("liveToast");
+    const toastMessage = document.getElementById("toastMessage");
+    const toastIcon = document.getElementById("toastIcon");
+    const bootstrapToast = new bootstrap.Toast(toastElement);
+
+    toastMessage.textContent = message;
+
+    if (isSuccess) {
+      toastIcon.className = "fa-solid fa-circle-check text-success fs-5";
+      toastElement.className = "toast align-items-center text-white bg-dark border-0 shadow";
+    } else {
+      toastIcon.className = "fa-solid fa-circle-xmark text-danger fs-5";
+      toastElement.className = "toast align-items-center text-white bg-danger border-0 shadow";
+    }
+    bootstrapToast.show();
+  }
+
+  function triggerDeleteModal(MemberId, title) {
+    activeMemberId = MemberId; // Sets the lowercase variable
+    document.getElementById("deleteTargetName").textContent = title;
+    if (deleteModalInstance) {
+      deleteModalInstance.show();
+    }
+  }
+
+document.getElementById("confirmDeleteBtn").addEventListener("click", async function () {
+  if (!activeMemberId) return; 
+  
+  if (deleteModalInstance) {
+    deleteModalInstance.hide();
+  }
+
+  try {
+    const response = await fetch(`/delete-user/${activeMemberId}`, {
+      method: "DELETE",
+    });
+
+    // Check if the server successfully deleted the item
+    if (response.ok) {
+      let message = "Member removed successfully.";
+      
+      // Safely try to parse JSON only if the response header says it's JSON
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        const result = await response.json();
+        message = `"${result.title || "Member"}" removed successfully.`;
+      }
+
+      showToast(message, true);
+      
+      // This will now execute and refresh the table automatically!
+      setTimeout(() => window.location.reload(), 1200);
+    } else {
+      // If server returned an error code (404, 500, etc.)
+      throw new Error("Delete operation transaction execution error.");
+    }
+  } catch (error) {
+    showToast(error.message, false);
+  } finally {
+    activeMemberId = null; 
+  }
+});
+</script>
+{% endblock %}

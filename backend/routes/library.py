@@ -122,10 +122,21 @@ async def my_library(
                     due_date = issue["due_date"].replace(tzinfo=None)
                     delta = now - due_date
                     issue["overdue_days"] = max(0, delta.days)
+                    issue["fine"] = issue["overdue_days"] * 5
+                    issue["fine_amount"] = issue["fine"]
+                    # Update database with the calculated fine
+                    issued_books_collection.update_one(
+                        {"_id": ObjectId(issue["_id"])},
+                        {"$set": {"fine_amount": issue["fine_amount"]}}
+                    )
                 except Exception:
                     issue["overdue_days"] = 0
+                    issue["fine"] = 0
+                    issue["fine_amount"] = 0
             else:
                 issue["overdue_days"] = 0
+                issue["fine"] = 0
+                issue["fine_amount"] = 0
 
             issued_books.append(issue)
 

@@ -47,7 +47,7 @@ async def dashboard(
     latest_books = list(
         books_collection.find()
         .sort("created_at", -1)
-        .limit(6)
+        .limit(8)
     )
 
     # ===========================

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException,status, Request
 from backend.schemas import Books, CategorySchema, LanguageSchema
-from backend.database import books_collection, categories_collection, languages_collection, issued_books_collection
+from backend.database import books_collection, categories_collection, languages_collection, issued_books_collection, users_collection
 from typing import List, Dict, Any
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -828,4 +828,72 @@ async def issue_book(
 
         status_code=status.HTTP_303_SEE_OTHER
 
+    )
+
+
+
+
+
+
+@router.get("/members")
+async def members(
+    request: Request,
+    user_session=Depends(ensure_authenticated_user)
+):
+
+    if not user_session:
+        return responses.RedirectResponse(
+            url="/login",
+            status_code=status.HTTP_303_SEE_OTHER
+        )
+
+
+    users = list(users_collection.find({}))
+
+    for user in users:
+        user["_id"] = str(user["_id"])
+
+    return templates.TemplateResponse(
+        request,
+        "members.html",
+        {
+            "request": request,
+            "users": users
+        }
+    )
+
+
+@router.delete("/delete-user/{user_id}")
+async def delete_user(
+    user_id: str,
+    user_session=Depends(ensure_authenticated_user)
+):
+
+    if not user_session:
+        return responses.RedirectResponse(
+            url="/login",
+            status_code=status.HTTP_303_SEE_OTHER
+        )
+
+    user = users_collection.find_one(
+        {
+            "_id": ObjectId(user_id)
+        }
+    )
+
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found."
+        )
+
+    users_collection.delete_one(
+        {
+            "_id": ObjectId(user_id)
+        }
+    )
+
+    return responses.RedirectResponse(
+        url="/members",
+        status_code=status.HTTP_303_SEE_OTHER
     )
