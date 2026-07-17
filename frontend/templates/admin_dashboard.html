@@ -25,7 +25,7 @@
       <div class="d-flex align-items-center justify-content-between">
         <div>
           <h6 class="text-muted text-uppercase small fw-bold mb-1">Total Members</h6>
-          <!-- Backend should pass total_books count dynamically -->
+          <!-- Backend should pass total members count dynamically -->
           <h3 class="fw-bold text-dark m-0">{{ total_members if total_members is defined else '0' }}</h3>
         </div>
         <div class="bg-primary-subtle text-dark rounded-circle p-3 fs-3 d-flex align-items-center justify-content-center" style="width: 55px; height: 55px;">
@@ -70,35 +70,57 @@
   </div>
 
   <!-- Metric Card: Issued Books -->
-  <div class="col-xl-3 col-md-6">
+ <div class="col-xl-3 col-md-6">
     <div class="custom-card p-4 shadow-sm border-start border-dark border-4 rounded-3 bg-white h-100">
       <div class="d-flex align-items-center justify-content-between">
         <div>
-          <h6 class="text-muted text-uppercase small fw-bold mb-1">Books Issued</h6>
-          <h3 class="fw-bold text-dark m-0">184</h3>
+          <h6 class="text-muted text-uppercase small fw-bold mb-1">Issued Books</h6>
+          <!-- Backend should pass issued_books count dynamically -->
+          <h3 class="fw-bold text-dark m-0">{{ issued_books if issued_books is defined else '0' }}</h3>
         </div>
         <div class="bg-primary-subtle text-dark rounded-circle p-3 fs-3 d-flex align-items-center justify-content-center" style="width: 55px; height: 55px;">
-          <i class="fa-solid fa-book-reader"></i>
+          <i class="fa-solid fa-tags"></i>
         </div>
       </div>
     </div>
   </div>
 
+
+  
   <!-- Metric Card: Overdue Returns -->
   <div class="col-xl-3 col-md-6">
     <div class="custom-card p-4 shadow-sm border-start border-dark border-4 rounded-3 bg-white h-100">
       <div class="d-flex align-items-center justify-content-between">
         <div>
-          <h6 class="text-muted text-uppercase small fw-bold mb-1">Overdue Items</h6>
-          <h3 class="fw-bold r m-0">12</h3>
+          <h6 class="text-muted text-uppercase small fw-bold mb-1">Overdue Books</h6>
+          <!-- Backend should pass overdue_books count dynamically -->
+          <h3 class="fw-bold text-dark m-0">{{ overdue_books if overdue_books is defined else '0' }}</h3>
         </div>
         <div class="bg-primary-subtle text-dark rounded-circle p-3 fs-3 d-flex align-items-center justify-content-center" style="width: 55px; height: 55px;">
-         <i class="fa-regular fa-clock"></i>
+          <i class="fa-solid fa-tags"></i>
         </div>
       </div>
     </div>
   </div>
-</div>
+
+
+<!-- total pending fine -->
+   <!-- <div class="col-xl-3 col-md-6">
+    <div class="custom-card p-4 shadow-sm border-start border-dark border-4 rounded-3 bg-white h-100">
+      <div class="d-flex align-items-center justify-content-between">
+        <div>
+          <h6 class="text-muted text-uppercase small fw-bold mb-1">Total Pending Fine</h6>
+
+          <h3 class="fw-bold text-dark m-0">{{ pending_fine if pending_fine is defined else '0' }}</h3>
+        </div>
+        <div class="bg-primary-subtle text-dark rounded-circle p-3 fs-3 d-flex align-items-center justify-content-center" style="width: 55px; height: 55px;">
+          <i class="fa-solid fa-tags"></i>
+        </div>
+      </div>
+    </div>
+  </div> -->
+
+
 
 <!-- 📈 DATA ANALYTICS & RECENT ACTIVITIES SPLIT SECTION -->
 <div class="row g-4">

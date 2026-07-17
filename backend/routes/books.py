@@ -666,6 +666,12 @@ async def book_details(
         for item in related_books:
             item["_id"] = str(item["_id"])
 
+        has_issued = issued_books_collection.find_one({
+            "book_id": book_id,
+            "user_id": user_session["user_id"],
+            "status": "Issued"
+        }) is not None
+
         return templates.TemplateResponse(
 
             request,
@@ -680,7 +686,9 @@ async def book_details(
 
                 "book": book,
 
-                "related_books": related_books
+                "related_books": related_books,
+                
+                "has_issued": has_issued
 
             }
 
@@ -786,7 +794,9 @@ async def issue_book(
 
             "return_date":None,
 
-            "status":"Issued"
+            "status":"Issued",
+            "fine_amount": 0,
+            "fine_paid": False
 
         }
 

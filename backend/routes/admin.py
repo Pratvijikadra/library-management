@@ -1,3 +1,4 @@
+from backend.database import users_collection
 import os
 import random
 import smtplib
@@ -7,7 +8,7 @@ from fastapi import Request, HTTPException, Form, responses, APIRouter, status
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from backend.database import otps_collection, books_collection, categories_collection
+from backend.database import otps_collection, books_collection, categories_collection, issued_books_collection
 
 
 load_dotenv()
@@ -129,10 +130,27 @@ async def admin_dashboard(request: Request):
 
     total_books = books_collection.count_documents({})
     total_categories = categories_collection.count_documents({})
+
+    total_members = users_collection.count_documents({})
+    issued_books = issued_books_collection.count_documents({"status": "Issued"})
+
+    now = datetime.now(timezone.utc)
+    overdue_books = issued_books_collection.count_documents(
+    {
+        "status": "Issued",
+        "due_date": {"$lt": now}
+    }
+)
+
+
+
         
     return templates.TemplateResponse(request,"admin_dashboard.html", {"request": request,
             "total_books": total_books,
-            "total_categories": total_categories})
+            "total_categories": total_categories,
+            "total_members": total_members,
+            "issued_books": issued_books,
+            "overdue_books": overdue_books})
 
 
 
@@ -143,7 +161,7 @@ async def admin_logout():
     if "is_authenticated" in admin_session_state:
         del admin_session_state["is_authenticated"]
     
-    # 2. Agar aap poori temporary state clear karna chahte hain
+    # 2. Clear all session state
     admin_session_state.clear()
     
     # 3. Direct login page (/admin) par redirect karein

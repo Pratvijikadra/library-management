@@ -30,17 +30,115 @@ My Library
 
         </div>
 
-        <span class="badge bg-primary fs-6">
 
-            {{ issued_books|length }} Books Issued
+        
 
-        </span>
+       
 
     </div>
 
-    <div class="custom-card p-4">
+    <ul class="nav nav-tabs mb-4" id="libraryTabs" role="tablist">
 
-        <h5 class="fw-bold mb-4">
+    <li class="nav-item" role="presentation">
+
+        <button
+            class="nav-link active"
+            id="issued-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#issued"
+            type="button" style="color: var(--bg-primary);">
+
+            <i class="fa-solid fa-book-open me-2"></i>
+
+            Issued Books
+
+            <span class="badge ms-2" style="background-color: var(--bg-primary);">
+
+                {{ issued_books|length }}
+
+            </span>
+
+        </button>
+
+    </li>
+
+    <li class="nav-item" role="presentation">
+
+        <button
+            class="nav-link"
+            id="wishlist-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#wishlist"
+            type="button" style="color: var(--bg-primary);">
+
+            <i class="fa-regular fa-heart me-2"></i>
+
+            Wishlist
+
+            <span class="badge ms-2" style="background-color: var(--bg-primary);">
+
+                {{ wishlist|length }}
+
+            </span>
+
+        </button>
+
+    </li>
+
+    <li class="nav-item" role="presentation">
+
+        <button
+            class="nav-link"
+            id="history-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#history"
+            type="button" style="color: var(--bg-primary);">
+
+            <i class="fa-solid fa-clock-rotate-left me-2"></i>
+
+            Reading History   <span class="badge ms-2" style="background-color: var(--bg-primary);">
+
+                {{ reading_history|length }}
+
+            </span>
+
+        </button>
+
+    </li>
+
+    <li class="nav-item" role="presentation">
+
+        <button
+            class="nav-link"
+            id="reservation-tab"
+            data-bs-toggle="tab"
+            data-bs-target="#reservation"
+            type="button" style="color: var(--bg-primary);">
+
+            <i class="fa-solid fa-calendar-check me-2"></i>
+
+            Reservations   <span class="badge ms-2" style="background-color: var(--bg-primary);">
+
+                {{ reservations|length }}
+
+            </span>
+
+        </button>
+
+    </li>
+
+</ul>
+
+
+    <div class="tab-content" id="libraryTabsContent">
+
+    <!-- Issued Books Tab -->
+
+    <div class="tab-pane fade show active" id="issued" role="tabpanel">
+
+        <div class="custom-card p-4">
+
+            <h5 class="fw-bold mb-4">
 
             <i class="fa-solid fa-book-open me-2"></i>
 
@@ -92,13 +190,13 @@ My Library
 
                                 <div class="mb-3">
 
-                                    <span class="badge bg-primary">
+                                    <span class="badge badge-style bg-primary">
 
                                         {{ issue.book.category_name }}
 
                                     </span>
 
-                                    <span class="badge bg-secondary">
+                                    <span class="badge badge-style bg-secondary">
 
                                         {{ issue.book.language }}
 
@@ -139,6 +237,29 @@ My Library
                                         </p>
 
                                     </div>
+                                    {% if issue.overdue_days > 0 %}
+
+<div class="alert alert-danger mt-3 mb-0">
+
+    <strong>
+
+        Overdue by
+
+        {{ issue.overdue_days }}
+
+        day(s)
+
+    </strong>
+
+    <br>
+
+    Fine :
+
+    ₹{{ issue.fine }}
+
+</div>
+
+{% endif %}
 
                                 </div>
 
@@ -159,7 +280,7 @@ My Library
 
                                     <a
                                         href="/books/{{ issue.book._id }}"
-                                        class="btn btn-outline-primary btn-sm">
+                                        class="btn btn-sm view-details-btn" style="border-color: var(--bg-primary);">
 
                                         <i class="fa-solid fa-eye me-1"></i>
 
@@ -274,6 +395,443 @@ My Library
 
     </div>
 
+
+    <div class="tab-pane fade" id="wishlist">
+
+    <div class="custom-card p-4">
+
+        <h5 class="fw-bold mb-4">
+
+            <i class="fa-regular fa-heart me-2 text-danger"></i>
+
+            Wishlist
+
+        </h5>
+
+        <div class="row g-4">
+
+            {% for item in wishlist %}
+
+            <div class="col-lg-6">
+
+                <div class="card border-0 shadow-sm">
+
+                    <div class="row g-0">
+
+                        <div class="col-4">
+
+                            <img
+                                src="{{ item.book.cover_image if item.book.cover_image else 'https://placehold.co/300x450?text=Book' }}"
+                                class="img-fluid rounded-start"
+                                style="height:220px;object-fit:cover;">
+
+                        </div>
+
+                        <div class="col-8">
+
+                            <div class="card-body">
+
+                                <h5>
+
+                                    {{ item.book.title }}
+
+                                </h5>
+
+                                <p class="text-muted">
+
+                                    {{ item.book.author_name }}
+
+                                </p>
+
+                                <span class="badge bg-primary">
+
+                                    {{ item.book.category_name }}
+
+                                </span>
+
+                                <div class="mt-4 d-flex gap-2">
+
+                                    <a
+                                        href="/books/{{ item.book._id }}"
+                                        class="btn view-details-btn btn-sm" style="border-color: var(--bg-primary);">
+                                          <i class="fa-solid fa-eye me-1"></i>
+
+                                        View Details
+
+                                    </a>
+
+                                    <a
+                                        href="/wishlist/remove/{{ item._id }}"
+                                        class="btn btn-outline-danger btn-sm">
+
+                                        Remove
+
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% else %}
+
+            <div class="col-12">
+
+                <div class="text-center py-5">
+
+                    <i class="fa-regular fa-heart fa-5x text-danger mb-3"></i>
+
+                    <h4>
+
+                        Wishlist Empty
+
+                    </h4>
+
+                    <p class="text-muted">
+
+                        Save books here to read later.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="tab-pane fade" id="history">
+
+<div class="custom-card p-4">
+
+<h5 class="fw-bold mb-4">
+
+<i class="fa-solid fa-clock-rotate-left me-2"></i>
+
+Reading History
+
+</h5>
+
+<div class="row g-4">
+
+{% for item in reading_history %}
+
+<div class="col-lg-6">
+
+<div class="card border-0 shadow-sm h-100">
+
+<div class="row g-0">
+
+<div class="col-4">
+
+<img
+
+src="{{ item.book.cover_image if item.book.cover_image else 'https://placehold.co/300x450?text=Book' }}"
+
+class="img-fluid rounded-start"
+
+style="height:220px;object-fit:cover;">
+
+</div>
+
+<div class="col-8">
+
+<div class="card-body">
+
+<h5>
+
+{{ item.book.title }}
+
+</h5>
+
+<p class="text-muted">
+
+{{ item.book.author_name }}
+
+</p>
+
+<div class="mb-3">
+
+<span class="badge bg-success">
+
+Returned
+
+</span>
+
+</div>
+
+<p class="mb-1">
+
+<strong>Issued :</strong>
+
+{{ item.issue_date.strftime("%d %b %Y") }}
+
+</p>
+
+<p>
+
+<strong>Returned :</strong>
+
+{{ item.return_date.strftime("%d %b %Y") }}
+
+</p>
+{% if item.fine_amount>0 %}
+
+<span class="badge bg-danger">
+
+Fine ₹{{ item.fine_amount }}
+
+</span>
+
+{% else %}
+
+<span class="badge bg-success">
+
+No Fine
+
+</span>
+
+{% endif %}
+
+<a
+
+href="/books/{{ item.book._id }}"
+
+class="btn btn-sm mt-2 view-details-btn" style="border-color: var(--bg-primary);">
+
+View Details
+
+</a>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+{% else %}
+
+<div class="col-12">
+
+<div class="text-center py-5">
+
+<i class="fa-solid fa-book fa-5x text-secondary mb-3"></i>
+
+<h4>
+
+No Reading History
+
+</h4>
+
+<p class="text-muted">
+
+Books you return will appear here.
+
+</p>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="tab-pane fade" id="reservation">
+
+    <div class="custom-card p-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+
+            <h5 class="fw-bold mb-0">
+
+                <i class="fa-solid fa-calendar-check me-2"></i>
+
+                My Reservations
+
+            </h5>
+
+            <span class="badge bg-warning text-dark fs-6">
+
+                {{ reservations|length }} Reserved
+
+            </span>
+
+        </div>
+
+        <div class="row g-4">
+
+            {% for reservation in reservations %}
+
+            <div class="col-lg-6">
+
+                <div class="card library-card border-0 shadow-sm h-100">
+
+                    <div class="row g-0">
+
+                        <!-- Cover -->
+
+                        <div class="col-md-4">
+
+                            <img
+                                src="{% if reservation.book.cover_image %}{{ reservation.book.cover_image }}{% else %}https://placehold.co/300x450?text=Book{% endif %}"
+                                class="img-fluid rounded-start"
+                                style="height:100%;object-fit:cover;">
+
+                        </div>
+
+                        <!-- Details -->
+
+                        <div class="col-md-8">
+
+                            <div class="card-body">
+
+                                <h5 class="fw-bold">
+
+                                    {{ reservation.book.title }}
+
+                                </h5>
+
+                                <p class="text-muted mb-2">
+
+                                    {{ reservation.book.author_name }}
+
+                                </p>
+
+                                <div class="mb-3">
+
+                                    <span class="badge bg-primary">
+
+                                        {{ reservation.book.category_name }}
+
+                                    </span>
+
+                                    <span class="badge bg-secondary">
+
+                                        {{ reservation.book.language }}
+
+                                    </span>
+
+                                </div>
+
+                                <p class="mb-2">
+
+                                    <strong>Reserved On:</strong>
+
+                                    {{ reservation.reserved_at.strftime("%d %b %Y") }}
+
+                                </p>
+
+                                <div class="mb-3">
+
+                                    <span class="badge bg-warning text-dark">
+
+                                        Reserved
+
+                                    </span>
+
+                                </div>
+
+                                <div class="d-flex gap-2 mt-4">
+
+                                    <a
+                                        href="/books/{{ reservation.book._id }}"
+                                        class="btn view-details-btn btn-sm" style="border-color: var(--bg-primary);">
+
+                                        <i class="fa-solid fa-eye me-1"></i>
+
+                                        View Details
+
+                                    </a>
+
+                                    <a
+                                        href="/reservation/cancel/{{ reservation._id }}"
+                                        class="btn btn-outline-danger btn-sm">
+
+                                        <i class="fa-solid fa-trash me-1"></i>
+
+                                        Cancel
+
+                                    </a>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            {% else %}
+
+            <div class="col-12">
+
+                <div class="text-center py-5">
+
+                    <i class="fa-solid fa-calendar-check fa-5x text-secondary mb-3"></i>
+
+                    <h4 class="fw-bold">
+
+                        No Reservations
+
+                    </h4>
+
+                    <p class="text-muted">
+
+                        Books you reserve will appear here.
+
+                    </p>
+
+                    <a
+                        href="/books"
+                        class="btn btn-primary-custom mt-3">
+
+                        <i class="fa-solid fa-book me-2"></i>
+
+                        Browse Books
+
+                    </a>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+</div>
+
 {% endblock %}
 
 {% block extra_css %}
@@ -306,7 +864,7 @@ My Library
     border-top:1px solid rgba(0,0,0,.08);
 }
 
-.badge{
+.badge-style{
     padding:.45rem .75rem;
     font-size:.78rem;
 }
@@ -317,6 +875,15 @@ My Library
 
 .custom-card{
     animation:fadeIn .35s ease;
+}
+
+.view-details-btn{
+    color: var(--bg-primary);
+}
+
+.view-details-btn:hover{
+    background-color: var(--bg-primary);
+    color: white;
 }
 
 @keyframes fadeIn{

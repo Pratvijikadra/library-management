@@ -151,18 +151,33 @@
         <!-- ========================= -->
 
         <div class="d-flex flex-wrap gap-3 mt-4">
-          <button class="btn btn-outline-danger" disabled>
-            <i class="fa-regular fa-heart me-2"></i>
+         <a
+    href="/wishlist/add/{{ book._id }}"
+    class="btn btn-outline-danger">
 
-            Add to Wishlist
-          </button>
+    <i class="fa-regular fa-heart me-2"></i>
 
-          <button class="btn btn-primary-custom" disabled>
-            <i class="fa-solid fa-calendar-check me-2"></i>
+    Add to Wishlist
 
-            Reserve Book
-          </button>
-          <a
+</a>
+
+
+
+         
+        {% if has_issued %}
+
+<button
+    class="btn btn-secondary" disabled>
+
+    <i class="fa-solid fa-book-open me-2"></i>
+
+    Already Issued
+
+</button>
+
+        {% elif book.available_copies > 0 %}
+
+<a
     href="/books/{{ book._id }}/issue"
     class="btn btn-success">
 
@@ -171,6 +186,20 @@
     Issue Book
 
 </a>
+
+{% else %}
+
+<a
+    href="/reservation/add/{{ book._id }}"
+    class="btn btn-warning">
+
+    <i class="fa-solid fa-calendar-check me-2"></i>
+
+    Reserve Book
+
+</a>
+
+{% endif %}
         </div>
       </div>
     </div>
