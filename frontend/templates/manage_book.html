@@ -154,12 +154,7 @@
   {% endif %}">
   {{ book.status }}
 </span>
-            <select class="form-select form-select-sm edit-mode d-none data-status" required>
-              <option value="Available" {% if book.status == 'Available' %}selected{% endif %}>Available</option>
-              <option value="Unavailable" {% if book.status == 'Unavailable' %}selected{% endif %}>Unavailable</option>
-              <!-- <option value="Damaged" {% if book.status == 'Damaged' %}selected{% endif %}>Damaged</option>
-              <option value="Lost" {% if book.status == 'Lost' %}selected{% endif %}>Lost</option> -->
-            </select>
+            <!-- Status is now automatically determined by available copies -->
           </td>
           <td class="text-center" style="border: 1px solid #dee2e6;">
             <div class="view-actions d-flex align-items-center justify-content-center gap-2">
@@ -261,14 +256,7 @@
           <label for="description" class="form-label fw-semibold text-secondary">Description</label>
           <textarea class="form-control" id="description" placeholder="Short description..."></textarea>
         </div>
-        <div class="mb-3">
-          <label for="status" class="form-label fw-semibold text-secondary">Status</label>
-          <select class="form-select" id="status" required>
-            <option value="Available" selected>Available</option>
-            <option value="Unavailable">Unavailable</option>
-           
-          </select>
-        </div>
+        <!-- Status field removed because it is automatically determined -->
       </div>
       <div class="modal-footer border-0 bg-light py-3">
         <button type="button" class="btn btn-secondary px-3" data-bs-dismiss="modal">Cancel</button>
@@ -378,9 +366,8 @@
       available_copies: parseInt(row.querySelector(".data-available_copies").value) || 0,
       cover_image: row.querySelector(".data-cover_image").value.trim(),
       description: row.querySelector(".data-description").value.trim(),
-      status: row.querySelector(".data-status").value,
+      status: "Available", // Hardcoded for schema validation, backend recalculates it
     };
-
     try {
       const response = await fetch(`/update-book/${isbn}`, {
         method: "PUT",
@@ -423,9 +410,8 @@
       available_copies: parseInt(document.getElementById("available_copies").value) || 0,
       cover_image: document.getElementById("cover_image").value.trim(),
       description: document.getElementById("description").value.trim(),
-      status: document.getElementById("status").value,
+      status: "Available", // Hardcoded for schema validation, backend recalculates it
     };
-
     try {
       const response = await fetch("/add-book", {
         method: "POST",

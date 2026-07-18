@@ -76,7 +76,7 @@
       
       // Save secure data to browser structures
       localStorage.setItem("user_access_token", result.access_token);
-      document.cookie = `user_access_token=${result.access_token}; path=/; max-age=7200; SameSite=Strict;`;
+      document.cookie = `user_access_token=${result.access_token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Strict;`;
       
       // Redirect after 2.5 seconds
       setTimeout(() => {

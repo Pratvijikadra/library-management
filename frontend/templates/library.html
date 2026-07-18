@@ -175,22 +175,33 @@ My Library
                         <div class="col-md-8">
 
                             <div class="card-body">
+                                  <div class="mt-0 mb-2">
+
+                                    <span class="badge bg-success-subtle text-dark">
+
+                                        {{ issue.status }}
+
+                                    </span>
+
+                                </div>
 
                                 <h5 class="fw-bold">
 
-                                    {{ issue.book.title }}
+                                  Book Name :  {{ issue.book.title }}
 
                                 </h5>
 
                                 <p class="text-muted mb-2">
 
-                                    {{ issue.book.author_name }}
+                                  Author : {{ issue.book.author_name }}<br>
+                                  Publisher : {{ issue.book.publisher_name }}<br>
+                                  
 
                                 </p>
 
                                 <div class="mb-3">
 
-                                    <span class="badge badge-style bg-primary">
+                                    <span class="badge badge-style bg-primary-subtle text-dark">
 
                                         {{ issue.book.category_name }}
 
@@ -206,7 +217,7 @@ My Library
 
                                 <div class="row">
 
-                                    <div class="col-6">
+                                    <div class="col-4">
 
                                         <small class="text-muted">
 
@@ -222,7 +233,7 @@ My Library
 
                                     </div>
 
-                                    <div class="col-6">
+                                    <div class="col-4">
 
                                         <small class="text-muted">
 
@@ -237,11 +248,26 @@ My Library
                                         </p>
 
                                     </div>
+                                     <div class="col-4">
+
+                                        <small class="text-muted">
+
+                                           Total Pages
+
+                                        </small>
+
+                                        <p class="fw-semibold">
+
+                                            {{ issue.book.pages }}
+
+                                        </p>
+
+                                    </div>
                                     {% if issue.overdue_days > 0 %}
 
-<div class="alert alert-danger mt-3 mb-0">
+<div class="alert mt-0 pt-0 mb-0">
 
-    <strong>
+    <span class="text-danger">
 
         Overdue by
 
@@ -249,29 +275,36 @@ My Library
 
         day(s)
 
-    </strong>
+    </span>
 
     <br>
-
+<span class="text-danger">
     Fine :
 
     ₹{{ issue.fine }}
+</span>
+
 
 </div>
 
+
+ 
+
 {% endif %}
 
+<a
+                                        href="/library/return/{{ issue._id }}"
+                                        class="btn btn-danger btn-sm w-auto ms-2">
+
+                                        <i class="fa-solid fa-rotate-left me-1"></i>
+
+                                        Return Book
+
+                                    </a>
+
                                 </div>
 
-                                <div class="mt-3">
-
-                                    <span class="badge bg-success">
-
-                                        {{ issue.status }}
-
-                                    </span>
-
-                                </div>
+                              
 
                                 <!-- Continue in Part 2 -->
 
@@ -288,15 +321,7 @@ My Library
 
                                     </a>
 
-                                    <a
-                                        href="/library/return/{{ issue._id }}"
-                                        class="btn btn-danger btn-sm">
-
-                                        <i class="fa-solid fa-rotate-left me-1"></i>
-
-                                        Return Book
-
-                                    </a>
+                                   
 
                                 </div>
 
@@ -433,19 +458,25 @@ My Library
 
                                 <h5>
 
-                                    {{ item.book.title }}
+                                  Book Name : {{ item.book.title }}
 
                                 </h5>
 
                                 <p class="text-muted">
 
-                                    {{ item.book.author_name }}
+                                   Author : {{ item.book.author_name }}
 
                                 </p>
 
-                                <span class="badge bg-primary">
+                                <span class="badge bg-primary-subtle text-dark">
 
                                     {{ item.book.category_name }}
+
+                                </span>
+
+                                <span class="badge bg-secondary-subtle text-dark">
+
+                                    {{ item.book.language }}
 
                                 </span>
 
@@ -552,13 +583,13 @@ style="height:220px;object-fit:cover;">
 
 <h5>
 
-{{ item.book.title }}
+Book Name : {{ item.book.title }}
 
 </h5>
 
 <p class="text-muted">
 
-{{ item.book.author_name }}
+Author : {{ item.book.author_name }}
 
 </p>
 
@@ -569,24 +600,6 @@ style="height:220px;object-fit:cover;">
 Returned
 
 </span>
-
-</div>
-
-<p class="mb-1">
-
-<strong>Issued :</strong>
-
-{{ item.issue_date.strftime("%d %b %Y") }}
-
-</p>
-
-<p>
-
-<strong>Returned :</strong>
-
-{{ item.return_date.strftime("%d %b %Y") }}
-
-</p>
 {% if item.fine_amount>0 %}
 
 <span class="badge bg-danger">
@@ -605,6 +618,25 @@ No Fine
 
 {% endif %}
 
+
+</div>
+
+<p class="mb-1">
+
+<strong>Issued :</strong>
+
+{{ item.issue_date.strftime("%d %b %Y") }}
+
+</p>
+
+<p>
+
+<strong>Returned :</strong>
+
+{{ item.return_date.strftime("%d %b %Y") }}
+
+</p>
+
 <a
 
 href="/books/{{ item.book._id }}"
@@ -614,6 +646,16 @@ class="btn btn-sm mt-2 view-details-btn" style="border-color: var(--bg-primary);
 View Details
 
 </a>
+
+<a
+                                        href="/history/delete/{{ item._id }}"
+                                        class="btn btn-outline-danger btn-sm" style="margin-top:10px;">
+
+                                        <i class="fa-solid fa-trash me-1"></i>
+
+                                        Remove
+
+                                    </a>
 
 </div>
 
@@ -710,25 +752,25 @@ Books you return will appear here.
 
                                 <h5 class="fw-bold">
 
-                                    {{ reservation.book.title }}
+                                   Book Name : {{ reservation.book.title }}
 
                                 </h5>
 
                                 <p class="text-muted mb-2">
 
-                                    {{ reservation.book.author_name }}
+                                  Author : {{ reservation.book.author_name }}
 
                                 </p>
 
                                 <div class="mb-3">
 
-                                    <span class="badge bg-primary">
+                                    <span class="badge bg-primary-subtle text-dark">
 
                                         {{ reservation.book.category_name }}
 
                                     </span>
 
-                                    <span class="badge bg-secondary">
+                                    <span class="badge bg-secondary-subtle text-dark">
 
                                         {{ reservation.book.language }}
 
@@ -921,6 +963,16 @@ Books you return will appear here.
 document.addEventListener("DOMContentLoaded",()=>{
 
     console.log("My Library Loaded");
+    
+    // Auto-open tab based on URL hash
+    let hash = window.location.hash;
+    if (hash) {
+        let tabButton = document.querySelector(`button[data-bs-target="${hash}"]`);
+        if (tabButton) {
+            let tab = new bootstrap.Tab(tabButton);
+            tab.show();
+        }
+    }
 
 });
 

@@ -9,7 +9,8 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from backend.database import otps_collection, books_collection, categories_collection, issued_books_collection
-
+from backend.routes.auth import create_access_token, SECRET_KEY, ALGORITHM
+import jwt
 
 load_dotenv()
 
@@ -21,7 +22,6 @@ ADMIN_PASSWORD = os.getenv("ADMIN_PASSWORD")
 
 # Temporary OTP Storage (Production me Redis ya database behtar hota hai, par abhi runtime memory me save karenge)
 # Format: {"otp": "123456", "verified_email": False}
-admin_session_state = {}
 
 # Yeh line ensure karegi ki 'created_at' time ke exact 300 seconds (5 mins) baad document automatic delete ho jaye
 otps_collection.create_index("created_at", expireAfterSeconds=300)
@@ -111,23 +111,40 @@ async def verify_admin_otp(request: Request, otp_input: str = Form(...)):
             "error": "OTP has expired or is invalid! Please request a new one."
         })
         
-    # 2. Agar OTP sahi mil jata hai, toh authentication state active karein
-    # Note: Dashboard session ke liye abhi bhi ek dynamic temporary flat session update kar sakte hain
-    admin_session_state["is_authenticated"] = True
+    # 2. Agar OTP sahi mil jata hai, toh JWT token create karein
+    token_payload = {"role": "admin", "email": otp_record["email"]}
+    access_token = create_access_token(token_payload)
     
     # 3. Use kiya hua OTP database se turant delete kar dein takki dobara use na ho sake
     otps_collection.delete_one({"_id": otp_record["_id"]})
     
-    return responses.RedirectResponse(url="/admin/dashboard", status_code=status.HTTP_303_SEE_OTHER)
+    response = responses.RedirectResponse(url="/admin/dashboard", status_code=status.HTTP_303_SEE_OTHER)
+    response.set_cookie(
+        key="admin_access_token",
+        value=access_token,
+        max_age=86400, # 1 day
+        httponly=True,
+        samesite="strict"
+    )
+    return response
 
 
 
 @router.get("/admin/dashboard", response_class=HTMLResponse)
 async def admin_dashboard(request: Request):
     # Strict Verification check
-    if not admin_session_state.get("is_authenticated"):
+    token = request.cookies.get("admin_access_token")
+    is_auth = False
+    if token:
+        try:
+            payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+            if payload.get("role") == "admin":
+                is_auth = True
+        except Exception:
+            pass
+            
+    if not is_auth:
         return responses.RedirectResponse(url="/admin", status_code=status.HTTP_303_SEE_OTHER)
-
     total_books = books_collection.count_documents({})
     total_categories = categories_collection.count_documents({})
 
@@ -157,12 +174,7 @@ async def admin_dashboard(request: Request):
 
 @router.get("/logout")
 async def admin_logout():
-    # 1. Server memory se authentication state ko clear karein
-    if "is_authenticated" in admin_session_state:
-        del admin_session_state["is_authenticated"]
-    
-    # 2. Clear all session state
-    admin_session_state.clear()
-    
-    # 3. Direct login page (/admin) par redirect karein
-    return responses.RedirectResponse(url="/admin", status_code=status.HTTP_303_SEE_OTHER)
+    # Clear admin cookie and redirect
+    response = responses.RedirectResponse(url="/admin", status_code=status.HTTP_303_SEE_OTHER)
+    response.delete_cookie("admin_access_token")
+    return response

@@ -1,0 +1,293 @@
+{% extends "base.html" %}
+
+{% block title %}My Account{% endblock %}
+{% block page_heading %}My Account{% endblock %}
+{% block nav_languages %}active{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+    <div class="row g-4">
+
+        <!-- Left Profile Card -->
+
+        <div class="col-lg-4">
+
+            <div class="custom-card p-4 text-center">
+
+                <div
+                    class="rounded-circle text-white d-flex align-items-center justify-content-center mx-auto mb-3"
+                    style="width:120px;height:120px;font-size:45px;background-color: var(--bg-primary);">
+
+                    <i class="fa-solid fa-user"></i>
+
+                </div>
+
+                <h4 class="fw-bold">
+
+                    {{ profile.name }}
+
+                </h4>
+
+                <p class="text-muted mb-2">
+
+                    {{ profile.email }}
+
+                </p>
+
+                <span class="badge bg-success">
+
+                    Active Member
+
+                </span>
+
+                <hr>
+
+                <div class="text-start">
+
+                    <p class="mb-2">
+
+                        <i class="fa-solid fa-envelope me-2" style="color: var(--bg-primary);"></i>
+
+                        {{ profile.email }}
+
+                    </p>
+
+                    <p class="mb-2">
+
+                        <i class="fa-solid fa-calendar-days me-2" style="color: var(--bg-primary);"></i>
+
+                        Joined :
+
+                        {{ profile.created_at.strftime("%d %b %Y") }}
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Right Update Form -->
+
+        <div class="col-lg-8">
+
+            <div class="custom-card p-4">
+
+                <h4 class="fw-bold mb-4">
+
+                    <i class="fa-solid fa-user-pen me-2"></i>
+
+                    Update Profile
+
+                </h4>
+
+                <form
+                    action="/account/update"
+                    method="POST">
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Full Name
+
+                        </label>
+
+                        <input
+                            type="text"
+                            name="name"
+                            class="form-control"
+                            value="{{ profile.name }}"
+                            required>
+
+                    </div>
+
+                    <div class="mb-4">
+
+                        <label class="form-label">
+
+                            Email Address
+
+                        </label>
+
+                        <input
+    type="email"
+    name="email"
+    class="form-control"
+    value="{{ profile.email }}">
+
+                       
+
+                    </div>
+
+                    <button
+                        class="btn btn-primary-custom">
+
+                        <i class="fa-solid fa-floppy-disk me-2"></i>
+
+                        Update Profile
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+<div class="custom-card p-4 mt-4">
+
+    <h4 class="fw-bold mb-4">
+
+        <i class="fa-solid fa-lock me-2"></i>
+
+        Change Password
+
+    </h4>
+
+    <form
+        action="/account/change-password"
+        method="POST">
+
+        <div class="mb-3">
+
+            <label class="form-label">
+
+                Current Password
+
+            </label>
+
+            <input
+                type="password"
+                class="form-control"
+                name="current_password"
+                required>
+
+        </div>
+
+        <div class="mb-3">
+
+            <label class="form-label">
+
+                New Password
+
+            </label>
+
+            <input
+                type="password"
+                class="form-control"
+                name="new_password"
+                minlength="6"
+                required>
+
+        </div>
+
+        <div class="mb-4">
+
+            <label class="form-label">
+
+                Confirm Password
+
+            </label>
+
+            <input
+                type="password"
+                class="form-control"
+                name="confirm_password"
+                minlength="6"
+                required>
+
+        </div>
+
+        <button
+            class="btn text-white" style="background-color: var(--bg-primary);">
+
+            <i class="fa-solid fa-key me-2"></i>
+
+            Change Password
+
+        </button>
+
+    </form>
+
+</div>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+
+function showToast(message,type){
+
+    const toast=document.getElementById("liveToast");
+    const msg=document.getElementById("toastMessage");
+    const icon=document.getElementById("toastIcon");
+
+    toast.classList.remove("bg-success","bg-danger","bg-warning","bg-info");
+
+    if(type==="success"){
+
+        toast.classList.add("bg-success");
+        icon.className="fa-solid fa-circle-check";
+
+    }else{
+
+        toast.classList.add("bg-danger");
+        icon.className="fa-solid fa-circle-xmark";
+
+    }
+
+    msg.innerText=message;
+
+    new bootstrap.Toast(toast,{
+        delay:3000
+    }).show();
+
+}
+
+const success="{{ success }}";
+const error="{{ error }}";
+
+if(success==="profile_updated"){
+    showToast("Profile updated successfully.","success");
+}
+
+if(success==="password_changed"){
+    showToast("Password changed successfully.","success");
+}
+
+if(error==="email_exists"){
+    showToast("Email already exists.","error");
+}
+
+if(error==="wrong_password"){
+    showToast("Current password is incorrect.","error");
+}
+
+if(error==="password_mismatch"){
+    showToast("Passwords do not match.","error");
+}
+
+if(error==="same_password"){
+    showToast("New password cannot be same as current password.","error");
+}
+
+if(error==="user_not_found"){
+    showToast("User account not found.","error");
+}
+
+</script>
+
+{% endblock %}

@@ -218,6 +218,9 @@ async def return_book(
         {
             "$inc": {
                 "available_copies": 1
+            },
+            "$set": {
+                "status": "Available"
             }
         }
     )
@@ -433,6 +436,33 @@ async def cancel_reservation(
     reservations_collection.delete_one(
         {
             "_id": ObjectId(reservation_id),
+            "user_id": user_session["user_id"]
+        }
+    )
+
+    return responses.RedirectResponse(
+        url="/library",
+        status_code=status.HTTP_303_SEE_OTHER
+    )
+
+
+
+# delete history
+@router.get("/history/delete/{history_id}")
+async def delete_history(
+    history_id: str,
+    user_session=Depends(ensure_authenticated_user)
+):
+
+    if not user_session:
+        return responses.RedirectResponse(
+            url="/login",
+            status_code=status.HTTP_303_SEE_OTHER
+        )
+
+    issued_books_collection.delete_one(
+        {
+            "_id": ObjectId(history_id),
             "user_id": user_session["user_id"]
         }
     )

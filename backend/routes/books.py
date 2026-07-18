@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException,status, Request
 from backend.schemas import Books, CategorySchema, LanguageSchema
-from backend.database import books_collection, categories_collection, languages_collection, issued_books_collection, users_collection
+from backend.database import books_collection, categories_collection, languages_collection, issued_books_collection, users_collection, wishlist_collection, reservations_collection
 from typing import List, Dict, Any
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
@@ -74,6 +74,9 @@ async def add_book(book_data: Books):
             book_dict["created_at"] = datetime.now().isoformat()
         book_dict["updated_at"] = datetime.now().isoformat()
 
+        # Enforce status based on available_copies
+        book_dict["status"] = "Available" if book_dict.get("available_copies", 0) > 0 else "Unavailable"
+
         # 4. Insert book into database and return a clean response for the JavaScript Toast
         result = books_collection.insert_one(book_dict)
         
@@ -119,7 +122,9 @@ async def update_book(isbn: str, books: Books):
             raise HTTPException(status_code=404, detail="Book not found with this ISBN")
             
         # Update logic
-        books_collection.update_one({"isbn": isbn}, {"$set": books.model_dump(mode="json")})
+        book_dict = books.model_dump(mode="json")
+        book_dict["status"] = "Available" if book_dict.get("available_copies", 0) > 0 else "Unavailable"
+        books_collection.update_one({"isbn": isbn}, {"$set": book_dict})
         
         # Updated data return karein
         updated_book = books_collection.find_one({"isbn": isbn})
@@ -569,6 +574,15 @@ async def browse_books(
 
         )
 
+        user_wishlist_ids = []
+        user_reserved_ids = []
+        if user_session:
+            user_id = user_session["user_id"]
+            wishlist = wishlist_collection.find({"user_id": user_id})
+            user_wishlist_ids = [str(w["book_id"]) for w in wishlist]
+            reservations = reservations_collection.find({"user_id": user_id, "status": "Reserved"})
+            user_reserved_ids = [str(r["book_id"]) for r in reservations]
+
         return templates.TemplateResponse(
 
             request,
@@ -579,6 +593,8 @@ async def browse_books(
 
                 "request": request,
                 "user":user_session,
+                "user_wishlist_ids": user_wishlist_ids,
+                "user_reserved_ids": user_reserved_ids,
 
                 "books": books,
 
@@ -672,6 +688,17 @@ async def book_details(
             "status": "Issued"
         }) is not None
 
+        is_in_wishlist = wishlist_collection.find_one({
+            "book_id": book_id,
+            "user_id": user_session["user_id"]
+        }) is not None
+
+        is_reserved = reservations_collection.find_one({
+            "book_id": book_id,
+            "user_id": user_session["user_id"],
+            "status": "Reserved"
+        }) is not None
+
         return templates.TemplateResponse(
 
             request,
@@ -688,7 +715,9 @@ async def book_details(
 
                 "related_books": related_books,
                 
-                "has_issued": has_issued
+                "has_issued": has_issued,
+                "is_in_wishlist": is_in_wishlist,
+                "is_reserved": is_reserved
 
             }
 
@@ -803,23 +832,12 @@ async def issue_book(
     )
 
     books_collection.update_one(
-
-        {
-
-            "_id":ObjectId(book_id)
-
-        },
-
-        {
-
-            "$inc":{
-
-                "available_copies":-1
-
-            }
-
-        }
-
+        {"_id": ObjectId(book_id)},
+        {"$inc": {"available_copies": -1}}
+    )
+    books_collection.update_one(
+        {"_id": ObjectId(book_id), "available_copies": {"$lte": 0}},
+        {"$set": {"status": "Unavailable"}}
     )
 
     return responses.RedirectResponse(
@@ -897,3 +915,41 @@ async def delete_user(
         url="/members",
         status_code=status.HTTP_303_SEE_OTHER
     )
+
+
+
+
+# Search suggestion 
+from fastapi import Query
+
+@router.get("/api/books/suggestions")
+async def book_suggestions(
+    q: str = Query(...)
+):
+    if not q.strip():
+        return []
+
+    cursor = books_collection.find(
+        {
+            "$or": [
+                {"title": {"$regex": q, "$options": "i"}},
+                {"author_name": {"$regex": q, "$options": "i"}},
+                {"isbn": {"$regex": q, "$options": "i"}}
+            ]
+        },
+        {
+            "title": 1,
+            "author_name": 1
+        }
+    ).limit(6)
+
+    suggestions = []
+
+    for book in cursor:
+        suggestions.append({
+            "id": str(book["_id"]),
+            "title": book["title"],
+            "author": book["author_name"]
+        })
+
+    return suggestions

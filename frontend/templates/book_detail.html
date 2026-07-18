@@ -139,6 +139,17 @@
         <!-- ========================= -->
 
         <div class="d-flex flex-wrap gap-3 mt-4">
+         {% if is_in_wishlist %}
+         <a
+    href="/library#wishlist"
+    class="btn btn-outline-danger">
+
+    <i class="fa-solid fa-heart me-2"></i>
+
+    Go to Wishlist
+
+</a>
+{% else %}
          <a
     href="/wishlist/add/{{ book._id }}"
     class="btn btn-outline-danger">
@@ -148,6 +159,7 @@
     Add to Wishlist
 
 </a>
+{% endif %}
 
 
 
@@ -177,6 +189,16 @@
 
 {% else %}
 
+{% if is_reserved %}
+<button
+    class="btn btn-warning" disabled>
+
+    <i class="fa-solid fa-calendar-check me-2"></i>
+
+    Already Reserved
+
+</button>
+{% else %}
 <a
     href="/reservation/add/{{ book._id }}"
     class="btn btn-warning">
@@ -186,6 +208,7 @@
     Reserve Book
 
 </a>
+{% endif %}
 
 {% endif %}
         </div>

@@ -49,7 +49,7 @@ Browse Books
     <!-- Search & Filters -->
     <!-- ========================= -->
 
-    <div class="custom-card p-4 mb-4">
+    <div class="custom-card p-4 mb-4" style="overflow: visible;">
 
         <form method="GET" action="/books">
 
@@ -57,7 +57,7 @@ Browse Books
 
                 <!-- Search -->
 
-                <div class="col-lg-4">
+                <div class="col-lg-4 position-relative" style="z-index: 1050;">
 
                     <label class="form-label fw-semibold">
 
@@ -67,10 +67,18 @@ Browse Books
 
                     <input
                         type="text"
+                        id="searchInput"
                         class="form-control"
                         name="search"
                         value="{{ search }}"
+                        autocomplete="off"
                         placeholder="Title, Author or ISBN">
+
+                         <div
+        id="searchSuggestions"
+        class="list-group position-absolute w-100 shadow"
+        style="z-index:1000;display:none;max-height:250px;overflow-y:auto;">
+    </div>
 
                 </div>
 
@@ -563,5 +571,70 @@ selects.forEach(select=>{
 });
 
 </script>
+
+
+<script>
+
+const input=document.getElementById("searchInput");
+const suggestionBox=document.getElementById("searchSuggestions");
+
+input.addEventListener("keyup",async()=>{
+
+    const keyword=input.value.trim();
+
+    if(keyword.length<1){
+        suggestionBox.style.display="none";
+        suggestionBox.innerHTML="";
+        return;
+    }
+
+    const res=await fetch(`/api/books/suggestions?q=${encodeURIComponent(keyword)}`);
+
+    const data=await res.json();
+
+    suggestionBox.innerHTML="";
+
+    if(data.length===0){
+        suggestionBox.innerHTML = `
+        <div class="list-group-item text-center text-muted">
+            <i class="fa-solid fa-circle-info me-2"></i>
+            No books found
+        </div>
+    `;
+
+    suggestionBox.style.display = "block";
+    return;
+    }
+
+    data.forEach(book=>{
+
+        suggestionBox.innerHTML+=`
+            <a
+                href="/books?search=${encodeURIComponent(book.title)}"
+                class="list-group-item list-group-item-action">
+
+                <strong>${book.title}</strong><br>
+
+                <small class="text-muted">${book.author}</small>
+
+            </a>
+        `;
+
+    });
+
+    suggestionBox.style.display="block";
+
+});
+
+document.addEventListener("click",(e)=>{
+
+    if(!input.contains(e.target) && !suggestionBox.contains(e.target)){
+        suggestionBox.style.display="none";
+    }
+
+});
+
+</script>
+
 
 {% endblock %}
