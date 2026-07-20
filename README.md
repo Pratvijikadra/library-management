@@ -173,7 +173,7 @@ Python Full Stack Developer
 
 GitHub : https://github.com/Pratvijikadra
 
-LinkedIn: https://linkedin.com/in/yourprofile
+LinkedIn: www.linkedin.com/in/pratvi-jikadra-551923361
 
 ---
 
