@@ -1,14 +1,11 @@
-
-
-https://drive.google.com/file/d/1BWcKy1qBakXcRy9WG2126ZxjRfZml9cl/view?usp=sharing
-
-
 # 📚 Library Management System
 
 A modern **Library Management System** built with **FastAPI**, **MongoDB Atlas**, **Jinja2 Templates**, **Bootstrap 5**, and **JWT Authentication**.
 The system provides separate interfaces for **Users** and **Admin**, enabling efficient management of books, issued, reservations, and user accounts.
 
----
+## 🎬 Project Demo Video
+User Side : https://drive.google.com/file/d/1BWcKy1qBakXcRy9WG2126ZxjRfZml9cl/view?usp=sharing
+Admin Side : https://drive.google.com/file/d/1FAMGJPfIbxREc9F8acr3WQ0K3dRhv1I2/view?usp=sharing
 
 ## 🚀 Features
 
@@ -18,8 +15,7 @@ The system provides separate interfaces for **Users** and **Admin**, enabling ef
 - Secure JWT Authentication
 - Browse Library Books
 - Live Book Search Suggestions
-- Filter Books by Category
-- Filter Books by Language
+- Filter Books by Category,Language
 - Sort Books
 - View Book Details
 - Issue Books
@@ -33,6 +29,7 @@ The system provides separate interfaces for **Users** and **Admin**, enabling ef
 - Overdue Fine Calculation (₹5 per day)
 - Dynamic Dashboard
 - Toast Notifications
+- Pagination System
 
 ---
 
@@ -42,12 +39,9 @@ The system provides separate interfaces for **Users** and **Admin**, enabling ef
 - Email OTP Verification
 - JWT Based Admin Session
 - Dashboard Analytics
-- Manage Books
-- Manage Categories
-- Manage Languages
-- Issue Book Monitoring
-- Overdue Books Monitoring
-- Member Statistics
+- Manage Books,Categories,Languages
+- Issue/return Book Monitoring
+- Member management
 
 ---
 
@@ -61,7 +55,7 @@ The system provides separate interfaces for **Users** and **Admin**, enabling ef
 - MongoDB Atlas
 - JWT Authentication
 - Bcrypt Password Hashing
-- FastAPI Mail
+- smtp Mail
 
 ### Frontend
 
@@ -76,137 +70,12 @@ The system provides separate interfaces for **Users** and **Admin**, enabling ef
 
 MongoDB Atlas
 
----
-
-# 📂 Project Structure
-
-```
-library_management_system/
-
-│
-├── backend/
-│   ├── routes/
-│   │   ├── admin.py
-│   │   ├── auth.py
-│   │   ├── books.py
-│   │   ├── my_account.py
-│   │   └── search.py
-│   │
-│   ├── database.py
-│   └── schemas.py
-│
-├── frontend/
-│   ├── templates/
-│   ├── static/
-│   ├── css/
-│   └── js/
-│
-├── .env
-├── main.py
-├── requirements.txt
-└── README.md
-```
-
----
-
-# 📦 MongoDB Collections
-
-## users
-
-```
-name
-email
-password
-created_at
-```
-
----
-
-## books
-
-```
-title
-isbn
-author_name
-publisher_name
-category_name
-language
-edition
-published_year
-pages
-shelf_no
-total_copies
-available_copies
-cover_image
-description
-status
-average_rating
-reviews_count
-created_at
-updated_at
-```
-
----
-
-## categories
-
-```
-name
-```
-
----
-
-## languages
-
-```
-name
-```
-
----
-
-## issued_books
-
-```
-user_id
-book_id
-issue_date
-due_date
-return_date
-status
-fine_amount
-fine_paid
-```
-
----
-
-## reservations
-
-```
-user_id
-book_id
-reservation_date
-status
-```
-
----
-
-## otp
-
-```
-email
-otp
-verified_email
-created_at
-```
-
----
-
 # ⚙ Installation
 
 ## Clone Repository
 
 ```bash
-git clone https://github.com/yourusername/library-management-system.git
+git clone https://github.com/Pratvijikadra/library-management.git
 ```
 
 ```
@@ -228,13 +97,6 @@ Windows
 ```bash
 venv\Scripts\activate
 ```
-
-Linux / Mac
-
-```bash
-source venv/bin/activate
-```
-
 ---
 
 ## Install Dependencies
@@ -254,7 +116,7 @@ SECRET_KEY=YOUR_SECRET_KEY
 
 ALGORITHM=HS256
 
-ACCESS_TOKEN_EXPIRE_DAYS=7
+ACCESS_TOKEN_EXPIRE_DAYS=Days
 
 ADMIN_EMAIL=your_admin_email@gmail.com
 
@@ -270,9 +132,6 @@ MAIL_PORT=587
 
 MAIL_SERVER=smtp.gmail.com
 
-MAIL_STARTTLS=True
-
-MAIL_SSL_TLS=False
 ```
 
 ---
@@ -289,24 +148,6 @@ Open
 http://127.0.0.1:8000
 ```
 
----
-
-# 📸 Screenshots
-
-You can add screenshots here.
-
-- Login Page
-- Register Page
-- User Dashboard
-- Books Page
-- Book Details
-- My Library
-- Reading History
-- My Account
-- Admin Dashboard
-
----
-
 # 🔐 Authentication
 
 ### User
@@ -319,56 +160,8 @@ You can add screenshots here.
 
 - Email + Password Login
 - OTP Verification
+- OTP Valid for 5 minutes only
 - JWT Authentication
-
----
-
-# 📈 Dashboard Analytics
-
-### User Dashboard
-
-- Total Books
-- Borrowed Books
-- Reserved Books
-- Returned Books
-- Reading Progress
-- Recent Activity
-
-### Admin Dashboard
-
-- Total Books
-- Total Categories
-- Total Members
-- Issued Books
-- Overdue Books
-
----
-
-# 💰 Fine Policy
-
-```
-₹5 Fine Per Day
-
-Fine = Overdue Days × ₹5
-```
-
----
-
-# ✨ Future Improvements
-
-- Book Reviews
-- Ratings
-- Wishlist
-- Email Notifications
-- Barcode Scanner
-- QR Code Support
-- Book Recommendation System
-- Dark Mode
-- Multi Admin Support
-- Profile Photo Upload
-- Payment Gateway for Fine
-- Reports & Analytics Export
-- Mobile Responsive Improvements
 
 ---
 
@@ -378,20 +171,10 @@ Fine = Overdue Days × ₹5
 
 Python Full Stack Developer
 
-GitHub: https://github.com/yourusername
+GitHub : https://github.com/Pratvijikadra
 
 LinkedIn: https://linkedin.com/in/yourprofile
 
 ---
 
-# ⭐ Support
-
-If you like this project, please give it a ⭐ on GitHub.
-
 It motivates me to build more awesome projects.
-
----
-
-# 📄 License
-
-This project is developed for learning and portfolio purposes.
