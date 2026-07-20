@@ -132,7 +132,7 @@ MAIL_PORT=587
 
 MAIL_SERVER=smtp.gmail.com
 
-```
+``` 
 
 ---
 
